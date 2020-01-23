@@ -37,7 +37,7 @@ public class Util {
     public static final String PROJECT_REGEX = "^(P[0-9]+)$";
     public static final String ADD_ITEM_REGEX = "^P[0-9]+(#S[0-9]+)*$";
     public static final String ITEM_REGEX = "(^P[0-9]+#I[0-9]+(?:,P[0-9]+#I[0-9]+)*)$";
-    private static final String PLUGIN_RESOUCE_PATH = "/plugin/sprints-plugin/";
+    private static final String PLUGIN_RESOUCE_PATH = "/plugin/zohosprints-plugin/";
     //public static final String MAIL_REGEX = "^([a-zA-Z0-9]([\\w\\-\\.\\+\\']*)@([\\w\\-\\.]*)(\\.[a-zA-Z]{2,20}(\\.[a-zA-Z]{2}){0,2}))$"
 
     public  enum Branchdetails {
