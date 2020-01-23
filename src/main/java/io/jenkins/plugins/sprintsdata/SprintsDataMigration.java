@@ -116,15 +116,15 @@ public class SprintsDataMigration {
 
             arr.put(new JSONObject().put("name", name).put("build", jobArr));
             if (arr.length() == 10) {
-                //requestDataMap.put("jenkinsdata", arr.toString());
-                LOGGER.info(arr.toString());
+                requestDataMap.put("jenkinsdata", arr.toString());
+                //LOGGER.info(arr.toString());
                 makeCall(requestDataMap);
                 arr = new JSONArray();
             }
         }
         if (arr.length() != 0) {
-            //requestDataMap.put("jenkinsdata", arr.toString());
-            LOGGER.info(arr.toString());
+            requestDataMap.put("jenkinsdata", arr.toString());
+            //LOGGER.info(arr.toString());
             makeCall(requestDataMap);
         }
         requestDataMap.put("action","migrationstatus");
