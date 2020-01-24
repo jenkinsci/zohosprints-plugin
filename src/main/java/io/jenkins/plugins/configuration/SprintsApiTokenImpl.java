@@ -17,7 +17,6 @@ public class SprintsApiTokenImpl extends BaseStandardCredentials implements Spri
     public SprintsApiTokenImpl(CredentialsScope scope, String id, String description, Secret apiToken) {
         super(scope, id, description);
         this.apiToken = apiToken;
-        LOGGER.log(Level.INFO,apiToken.getPlainText());
     }
 
     @Override
