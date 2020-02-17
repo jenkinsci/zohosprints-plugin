@@ -53,13 +53,14 @@ public class RunTimeListener extends RunListener<Run<?, ?>> {
                 buildDatamap.put("queuetime", queueTimeListener.getTimeInQueue());
             }
             buildDatamap.put("name", run.getParent().getFullName());
-            buildDatamap.put("zapikey", zspojo.getApiToken());
+           // buildDatamap.put("zapikey", zspojo.getApiToken());
             //buildDatamap.put("mailid", zspojo.getMailid());
             buildDatamap.put("number", run.getNumber());
             buildDatamap.put("starttime", run.getStartTimeInMillis());
             buildDatamap.put("jenkinuser", Util.getBuildTriggererUserId(run));
             try {
                 RequestClient client = new RequestClient(zspojo.getCreateBuild(), RequestClient.METHOD_POST, buildDatamap, headerMap);
+                client.setOAuthHeader();
                 client.execute();
             } catch (Exception e) {
                 LOGGER.log(Level.WARNING, "", e);
@@ -129,7 +130,7 @@ public class RunTimeListener extends RunListener<Run<?, ?>> {
                     buildDatamap.put("queuetime", queueTimeListener.getTimeInQueue());
                 }
                 buildDatamap.put("name", run.getParent().getFullName());
-                buildDatamap.put("zapikey", api.getApiToken());
+               // buildDatamap.put("zapikey", api.getApiToken());
                // buildDatamap.put("mailid", api.getMailid());
                 buildDatamap.put("number", run.getNumber());
                 buildDatamap.put("starttime", run.getStartTimeInMillis());
@@ -146,6 +147,7 @@ public class RunTimeListener extends RunListener<Run<?, ?>> {
                 try {
                     RequestClient client = new RequestClient(api.getBuildPush(), RequestClient.METHOD_POST, buildDatamap, headerMap);
                     client.setAttachment(buildLogMap);
+                    client.setOAuthHeader();
                     client.execute();
                 } catch (Exception e) {
                     LOGGER.log(Level.WARNING,  "", e);

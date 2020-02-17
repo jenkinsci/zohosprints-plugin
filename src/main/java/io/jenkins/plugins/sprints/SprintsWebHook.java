@@ -40,7 +40,7 @@ public class SprintsWebHook {
     private String prefix = null, status = null, notes = null, itemName = null, itemDesc = null, priority = null, assignee = null, itemType = null, mailId = null;
     private boolean isAttachmentNeeded = false;
     private HashMap<String, Object> paramMap = new HashMap<>();
-    private HashMap<String, String> headerMap = new HashMap<>();
+    //private HashMap<String, String> headerMap = new HashMap<>();
     private HashMap<String, AttachmentUtil> attachMap = new HashMap<>();
     private List<String> prefixList = new ArrayList<>();
     private Run<?, ?> run;
@@ -339,21 +339,21 @@ public class SprintsWebHook {
      * @return Instance of Class
      */
     private SprintsWebHook doInitParamMap() {
-        doInitCommonParamMap();
+      //  doInitCommonParamMap();
         paramMap.put("name", run.getParent().getFullName());
         paramMap.put("number", run.getId());
         paramMap.put("jenkinuser", Util.getBuildTriggererUserId(run));
         return this;
     }
 
-    /**
-     *
-     * @return Instance of Class
-     */
-    private SprintsWebHook doInitCommonParamMap() {
-        paramMap.put("zapikey", config.getApiToken());
-        return this;
-    }
+//    /**
+//     *
+//     * @return Instance of Class
+//     */
+//    private SprintsWebHook doInitCommonParamMap() {
+//        paramMap.put("zapikey", config.getApiToken());
+//        return this;
+//    }
 
     /**
      *
@@ -363,7 +363,7 @@ public class SprintsWebHook {
         isAuthedicated();
         List<SprintsConnectionConfig> extnList =  new ArrayList<>(Jenkins.getInstance().getExtensionList(SprintsConnectionConfig.class));
         SprintsConnectionConfig conf = extnList.get(0);
-        headerMap.put("X-ZS-JENKINS-ID", conf.getZsheader());
+       // headerMap.put("X-ZS-JENKINS-ID", conf.getZsheader());
         config = conf.getClient();
     }
 
@@ -376,7 +376,7 @@ public class SprintsWebHook {
         isAuthedicated();
         List<SprintsConnectionConfig> extnList =  new ArrayList<>(Jenkins.getInstance().getExtensionList(SprintsConnectionConfig.class));
         SprintsConnectionConfig conf = extnList.get(0);
-        headerMap.put("X-ZS-JENKINS-ID", conf.getZsheader());
+       // headerMap.put("X-ZS-JENKINS-ID", conf.getZsheader());
         config = conf.getClient();
         this.run = runObj;
     }
@@ -454,7 +454,8 @@ public class SprintsWebHook {
      * @throws Exception Throws exception when error occurs at RunTime
      */
     public static SprintsWebHook getInstanceForFetchStatus(final String fromprefix) throws Exception {
-        return new SprintsWebHook().setPrefix(fromprefix).setMailId().doInitCommonParamMap().makeProjectPrefix();
+        //return new SprintsWebHook().setPrefix(fromprefix).setMailId().doInitCommonParamMap().makeProjectPrefix();
+        return new SprintsWebHook().setPrefix(fromprefix).setMailId().makeProjectPrefix();
     }
 
     /**
@@ -464,10 +465,11 @@ public class SprintsWebHook {
      * @return Instance of Class
      */
     private RequestClient getClient(final String url, final String method) {
-        RequestClient client = new RequestClient(url, method, paramMap, headerMap);
+        RequestClient client = new RequestClient(url, method, paramMap);
         if (isAttachmentNeeded) {
             client.setAttachment(attachMap);
         }
+        client.setOAuthHeader();
         return client;
     }
 
@@ -576,7 +578,7 @@ public class SprintsWebHook {
         if (prefixList.isEmpty()) {
             throw new Exception("Invalid prefix given for Create Item");
         }
-        paramMap.put("action", ITEM_CREATE);
+       // paramMap.put("action", ITEM_CREATE);
         paramMap.put("prefix", prefixList.get(0));
         paramMap.put("description", getItemDesc());
         paramMap.put("issuename", getItemName());
@@ -614,7 +616,7 @@ public class SprintsWebHook {
             throw new Exception("Invalid prefix given for Item Priority update");
         }
         paramMap.put("action", ITEM_UPDATE_PRIORITY);
-        paramMap.put("status", priority);
+        paramMap.put("priority", priority);
         paramMap.put("prefix", URLEncoder.encode(makeListAsString(prefixList), RequestClient.CHARSET));
         return getClient(config.getUpdateAction(), RequestClient.METHOD_POST).execute();
     }

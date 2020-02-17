@@ -12,7 +12,10 @@ import hudson.util.Secret;
  */
 @NameWith(SprintsApiToken.NameProvider.class)
 public interface SprintsApiToken extends StandardCredentials {
-    Secret getApiToken();
+    Secret getClientId();
+    Secret getClientSecret();
+    Secret getRefreshToken();
+    String getRedirectUrl();
 
     class NameProvider extends CredentialsNameProvider<SprintsApiToken> {
         /**

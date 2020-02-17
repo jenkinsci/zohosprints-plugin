@@ -22,7 +22,7 @@ public class SprintsConnection {
     private static final Logger LOGGER = Logger.getLogger(SprintsConnection.class.getName());
     private final String name;
     private final String url;
-    private transient String apiToken;
+   // private transient String apiToken;
     private String apiTokenId;
     private SprintsConfig config;
     private final String mailid;
@@ -77,27 +77,59 @@ public class SprintsConnection {
      */
     public SprintsConfig getClient() {
         if (config == null) {
-            config = new SprintsConfig(url, mailid, getApiToken(apiTokenId));
+            //config = new SprintsConfig(url, mailid, getApiToken(apiTokenId));
+            config = new SprintsConfig(url, mailid, getRedirectUrl(apiTokenId), getClientId(apiTokenId), getClientSecret(apiTokenId), getRefreshToken(apiTokenId));
         }
         return config;
     }
 
-    /**
-     *
-     * @param apiTokenId apiToken from Sprints Global config to get apikey value
-     * @return String
-     */
+
     @Restricted(NoExternalUse.class)
-    private String getApiToken(String apiTokenId) {
+    private String getRefreshToken(String apiTokenId) {
         StandardCredentials credentials = CredentialsMatchers.firstOrNull(
                 CredentialsProvider.lookupCredentials(StandardCredentials.class, (Item) null, ACL.SYSTEM, new ArrayList<DomainRequirement>()),
                 CredentialsMatchers.withId(apiTokenId));
         if (credentials != null) {
             if (credentials instanceof SprintsApiToken) {
-                return ((SprintsApiToken) credentials).getApiToken().getPlainText();
+                return ((SprintsApiToken) credentials).getRefreshToken().getPlainText();
             }
-            if (credentials instanceof StringCredentials) {
-                return ((StringCredentials) credentials).getSecret().getPlainText();
+        }
+        throw new IllegalStateException("No credentials found for credentialsId: " + apiTokenId);
+    }
+
+    @Restricted(NoExternalUse.class)
+    private String getClientSecret(String apiTokenId) {
+        StandardCredentials credentials = CredentialsMatchers.firstOrNull(
+                CredentialsProvider.lookupCredentials(StandardCredentials.class, (Item) null, ACL.SYSTEM, new ArrayList<DomainRequirement>()),
+                CredentialsMatchers.withId(apiTokenId));
+        if (credentials != null) {
+            if (credentials instanceof SprintsApiToken) {
+                return ((SprintsApiToken) credentials).getClientSecret().getPlainText();
+            }
+        }
+        throw new IllegalStateException("No credentials found for credentialsId: " + apiTokenId);
+    }
+    @Restricted(NoExternalUse.class)
+    private String getClientId(String apiTokenId) {
+        StandardCredentials credentials = CredentialsMatchers.firstOrNull(
+                CredentialsProvider.lookupCredentials(StandardCredentials.class, (Item) null, ACL.SYSTEM, new ArrayList<DomainRequirement>()),
+                CredentialsMatchers.withId(apiTokenId));
+        if (credentials != null) {
+            if (credentials instanceof SprintsApiToken) {
+                return ((SprintsApiToken) credentials).getClientId().getPlainText();
+            }
+
+        }
+        throw new IllegalStateException("No credentials found for credentialsId: " + apiTokenId);
+    }
+    @Restricted(NoExternalUse.class)
+    private String getRedirectUrl(String apiTokenId) {
+        StandardCredentials credentials = CredentialsMatchers.firstOrNull(
+                CredentialsProvider.lookupCredentials(StandardCredentials.class, (Item) null, ACL.SYSTEM, new ArrayList<DomainRequirement>()),
+                CredentialsMatchers.withId(apiTokenId));
+        if (credentials != null) {
+            if (credentials instanceof SprintsApiToken) {
+                return ((SprintsApiToken) credentials).getRedirectUrl();
             }
         }
         throw new IllegalStateException("No credentials found for credentialsId: " + apiTokenId);

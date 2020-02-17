@@ -29,32 +29,36 @@ public class SprintsDataMigration {
     private static final Logger LOGGER = Logger.getLogger(SprintsDataMigration.class.getName());
 
     private List<Item> itemList;
-    private String integ, header, portal;
+    private String  header, portal, accessToken;
    private Map<String, Object> requestDataMap = new HashMap<>();
     private Map<String, String> requestHeaderMap = new HashMap<>();
 
     /**
      *
      * @param fromitemList All items to be migrate
-     * @param frominteg Api key
      * @param fromportal portal url
      * @param header admin mail id
      */
-    public SprintsDataMigration(final List<Item> fromitemList, final String frominteg, final String fromportal, final String header) {
+    public SprintsDataMigration(final List<Item> fromitemList,  final String fromportal, final String header, final String accessToken) {
         this.itemList = fromitemList;
-        this.integ = frominteg;
         this.portal = fromportal;
         this.header = header;
+        this.accessToken = accessToken;
     }
 
     /**
      *
      */
     public void run() {
-        requestDataMap.put("zapikey", integ);
+        //requestDataMap.put("zapikey", integ);
         requestDataMap.put("action", "migration");
         requestHeaderMap.put("X-ZS-JENKINS-ID",header);
+        requestHeaderMap.put("Authorization", "Zoho-oauthtoken "+accessToken);
         LOGGER.info(String.valueOf(itemList.size()));
+        if(itemList.size() == 0){
+            LOGGER.log(Level.INFO,"There is no existing Item. So, skipping migration");
+            return;
+        }
         JSONArray arr = new JSONArray();
         for (Item itemObj : itemList) {
             JSONArray jobArr = new JSONArray();
@@ -117,14 +121,14 @@ public class SprintsDataMigration {
             arr.put(new JSONObject().put("name", name).put("build", jobArr));
             if (arr.length() == 10) {
                 requestDataMap.put("jenkinsdata", arr.toString());
-                //LOGGER.info(arr.toString());
+               // LOGGER.info(arr.toString());
                 makeCall(requestDataMap);
                 arr = new JSONArray();
             }
         }
         if (arr.length() != 0) {
             requestDataMap.put("jenkinsdata", arr.toString());
-            //LOGGER.info(arr.toString());
+           //LOGGER.info(arr.toString());
             makeCall(requestDataMap);
         }
         requestDataMap.put("action","migrationstatus");

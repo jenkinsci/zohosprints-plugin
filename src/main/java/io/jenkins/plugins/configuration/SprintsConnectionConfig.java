@@ -8,6 +8,7 @@ import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
 import com.cloudbees.plugins.credentials.domains.URIRequirementBuilder;
 import hudson.Extension;
 import hudson.model.Item;
+import hudson.scheduler.Hash;
 import hudson.security.ACL;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
@@ -15,6 +16,7 @@ import hudson.util.Secret;
 import io.jenkins.plugins.Messages;
 import io.jenkins.plugins.sprints.RequestClient;
 import io.jenkins.plugins.sprintsdata.SprintsDataMigration;
+import io.jenkins.plugins.util.OAuthUtil;
 import jenkins.model.GlobalConfiguration;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
@@ -24,9 +26,12 @@ import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.DoNotUse;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.bind.JavaScriptMethod;
 import org.kohsuke.stapler.interceptor.RequirePOST;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -203,21 +208,22 @@ public class SprintsConnectionConfig extends GlobalConfiguration {
                                            @QueryParameter String mailid ) {
         Jenkins.getInstanceOrNull().checkPermission(Jenkins.ADMINISTER);
         try {
-            String token = new SprintsConnection("", url, mailid, apiTokenId).getClient().getApiToken();
+            SprintsConfig config = new SprintsConnection("", url, mailid, apiTokenId).getClient();
+            String accessToken = OAuthUtil.getNewAccessToken(config);
+            Map<String, String> headerMap = new HashMap<>();
+            headerMap.put("Authorization", "Zoho-oauthtoken "+ accessToken);
             Map<String, Object> param = new HashMap<>();
-            param.put("zapikey", token);
             param.put("action", "doauthendiate");
             param.put("mailid",mailid);
             String portal = url + "/zsapi/jenkins/authendicate/";
-            RequestClient request = new RequestClient(portal, RequestClient.METHOD_GET, param);
-            LOGGER.log(Level.INFO,portal);
+            RequestClient request = new RequestClient(portal, RequestClient.METHOD_GET, param, headerMap);
             org.json.JSONObject reposne = new org.json.JSONObject(request.execute());
 
             if (reposne != null && reposne.getString("status").equalsIgnoreCase("success")) {
                 if (reposne.has("isMigrated") && !reposne.getBoolean("isMigrated") && reposne.getBoolean("isZuidAvailable")) {
                     String header = reposne.getString("zsheader");
                     List<Item> itemList = Jenkins.getInstance().getAllItems();
-                    new SprintsDataMigration(itemList, token, url, header).run();
+                    new SprintsDataMigration(itemList, url, header, accessToken).run();
                     setZsheader(header);
                 } else if (reposne.getBoolean("isZuidAvailable")) {
                     setZsheader(reposne.getString("zsheader"));
@@ -225,7 +231,7 @@ public class SprintsConnectionConfig extends GlobalConfiguration {
                 setMigrated(true);
             } else {
                 setMigrated(false);
-                return FormValidation.ok(Messages.config_connection_failure());
+                return FormValidation.ok(reposne.getString("message"));
             }
 
             return FormValidation.ok(Messages.config_connection_success());
@@ -235,6 +241,7 @@ public class SprintsConnectionConfig extends GlobalConfiguration {
             return FormValidation.error(Messages.config_connection_error(e.getMessage()));
         }
     }
+
 
     /**
      *
@@ -265,6 +272,7 @@ public class SprintsConnectionConfig extends GlobalConfiguration {
         return new StandardListBoxModel();
     }
 
+
     /**
      * @version 1.0
      */
@@ -277,7 +285,7 @@ public class SprintsConnectionConfig extends GlobalConfiguration {
         @Override
         public boolean matches(@Nonnull final Credentials credentials) {
             try {
-                return credentials instanceof SprintsApiToken || credentials instanceof StringCredentials;
+                return credentials instanceof SprintsApiToken;
             } catch (Throwable e) {
                 return false;
             }

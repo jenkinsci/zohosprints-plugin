@@ -10,18 +10,37 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SprintsApiTokenImpl extends BaseStandardCredentials implements SprintsApiToken {
-    private Secret apiToken;
+    private Secret code, refreshToken, clientId, clientSecret;
+    private String redirectUrl;
    private static final Logger LOGGER = Logger.getLogger(SprintsApiTokenImpl.class.getName());
 
     @DataBoundConstructor
-    public SprintsApiTokenImpl(CredentialsScope scope, String id, String description, Secret apiToken) {
+    public SprintsApiTokenImpl(CredentialsScope scope, String id, String description, Secret clientId, Secret clientSecret, Secret refreshToken, String redirectUrl) {
         super(scope, id, description);
-        this.apiToken = apiToken;
+        this.refreshToken = refreshToken;
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+        this.redirectUrl = redirectUrl;
     }
 
     @Override
-    public Secret getApiToken() {
-        return apiToken;
+    public Secret getClientId() {
+        return clientId;
+    }
+
+    @Override
+    public Secret getClientSecret() {
+        return clientSecret;
+    }
+
+    @Override
+    public Secret getRefreshToken() {
+        return refreshToken;
+    }
+
+    @Override
+    public String getRedirectUrl() {
+        return redirectUrl;
     }
 
     @Extension

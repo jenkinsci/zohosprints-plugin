@@ -58,11 +58,12 @@ public class ItemChangeListener extends ItemListener {
         if (api != null) {
             new Thread(() -> {
                 Map<String, Object> param = new HashMap<>();
-                param.put("zapikey", api.getApiToken());
+               // param.put("zapikey", api.getApiToken());
                // param.put("mailid", api.getMailid());
                 param.put("name", item.getFullName());
-                RequestClient client = new RequestClient(api.getJobDeleteUrl(), RequestClient.METHOD_DELETE, param, getHeader());
+                RequestClient client = new RequestClient(api.getJobDeleteUrl(), RequestClient.METHOD_DELETE, param);
                 try {
+                    client.setOAuthHeader();
                     client.execute();
                 } catch (Exception e) {
                     LOGGER.log(Level.WARNING,"", e);
@@ -100,13 +101,14 @@ public class ItemChangeListener extends ItemListener {
         if (api != null) {
             new Thread(() -> {
                 Map<String, Object> param = new HashMap<>();
-                param.put("zapikey", api.getApiToken());
+               // param.put("zapikey", api.getApiToken());
                // param.put("mailid", api.getMailid());
                 param.put("action", "update");
                 param.put("name", oldFullName);
                 param.put("newname", newFullName);
-                RequestClient client = new RequestClient(api.getJobDeleteUrl(), RequestClient.METHOD_POST, param, getHeader());
+                RequestClient client = new RequestClient(api.getJobDeleteUrl(), RequestClient.METHOD_POST, param);
                 try {
+                    client.setOAuthHeader();
                     client.execute();
                 } catch (Exception e) {
                     LOGGER.log(Level.WARNING, "", e);
@@ -124,12 +126,13 @@ public class ItemChangeListener extends ItemListener {
         if (api != null) {
             new Thread(() -> {
                 Map<String, Object> param = new HashMap<>();
-                param.put("zapikey", api.getApiToken());
+                //param.put("zapikey", api.getApiToken());
                // param.put("mailid", api.getMailid());
                 param.put("name", item.getFullName());
                 param.put("action", "create");
-                RequestClient client = new RequestClient(api.getCreateJob(), RequestClient.METHOD_POST, param, getHeader());
+                RequestClient client = new RequestClient(api.getCreateJob(), RequestClient.METHOD_POST, param);
                 try {
+                    client.setOAuthHeader();
                     client.execute();
                 } catch (Exception e) {
                     LOGGER.log(Level.WARNING, "", e);

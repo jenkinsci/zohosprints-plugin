@@ -1,5 +1,6 @@
 package io.jenkins.plugins.sprints;
 
+import io.jenkins.plugins.util.OAuthUtil;
 import io.jenkins.plugins.util.Util;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -220,6 +221,10 @@ public class RequestClient {
             }
         }
         return httpreq;
+    }
+
+    public void setOAuthHeader() {
+        header = OAuthUtil.getOAuthHeader();
     }
 
     /**

@@ -6,10 +6,11 @@ import org.kohsuke.accmod.restrictions.NoExternalUse;
  *@author selvavignesh.m
  * @version 1.0
  */
+@Restricted(NoExternalUse.class)
 public class SprintsConfig {
-    private final String url;
-    private final String mailid;
-    private final String apiToken;
+    private final String url, mailid, clientId, clientSecret, refrehToken;
+    private String accessToken, redirectUrl;
+    private Long accessTokenUpdatedTime = null;
     private static final String JOB_DELETE_URL = "/zsapi/jenkins/createjob/";
     private static final String CREATE_JOB = "/zsapi/jenkins/createjob/";
     private static final String CREATE_BUILD = "/zsapi/jenkins/createbuild/";
@@ -24,13 +25,16 @@ public class SprintsConfig {
      *
      * @param fromurl - Sprints team url
      * @param frommailid - team mail id
-     * @param fromapiToken - api token
+     * @param redirectUrl - api token
      */
     @Restricted(NoExternalUse.class)
-    public SprintsConfig(final String fromurl, final String frommailid, final String fromapiToken ) {
+    public SprintsConfig(final String fromurl, final String frommailid, final String redirectUrl, final String clientid, final String clientSecret, final String refreshToken ) {
         this.url = fromurl;
         this.mailid = frommailid;
-        this.apiToken = fromapiToken;
+        this.redirectUrl = redirectUrl;
+        this.clientId = clientid;
+        this.clientSecret = clientSecret;
+        this.refrehToken = refreshToken;
     }
 
     /**
@@ -38,7 +42,19 @@ public class SprintsConfig {
      * @return Team url
      */
     public String getUrl() {
-        return url;
+        String apiUrl = "https://sprints.zoho.";
+        if(this.url.contains("zoho.com.au")){
+            apiUrl = apiUrl.concat("com.au");
+        } else if(this.url.contains("zoho.com")){
+            apiUrl = apiUrl.concat("com.au");
+        } else if(this.url.contains("zoho.eu")){
+            apiUrl = apiUrl.concat("com.au");
+        } else if(this.url.contains("zoho.in")){
+            apiUrl = apiUrl.concat("com.au");
+        } else {
+            apiUrl = this.url;
+        }
+        return apiUrl;
     }
 
     /**
@@ -53,8 +69,8 @@ public class SprintsConfig {
      *
      * @return apitoken
      */
-    public String getApiToken() {
-        return apiToken;
+    public String getRedirectUrl() {
+        return redirectUrl;
     }
 
 
@@ -130,5 +146,47 @@ public class SprintsConfig {
         return url + STATUS_ACTION;
     }
 
+    public String getClientId() {
+        return clientId;
+    }
+
+    public String getClientSecret() {
+        return clientSecret;
+    }
+
+    public String getRefrehToken() {
+        return refrehToken;
+    }
+    public String getAccessToken() {
+        return accessToken;
+    }
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public Long getAccessTokenUpdatedTime() {
+        return accessTokenUpdatedTime;
+    }
+
+    public void setAccessTokenUpdatedTime(long accessTokenUpdatedTime) {
+        this.accessTokenUpdatedTime = accessTokenUpdatedTime;
+    }
+
+    public  String
+    getAccountsUrl(){
+        String accountsUrl = null;
+        if(this.url.contains("zoho.com.au")){
+            accountsUrl = "https://accounts.zoho.com.au";
+        } else if(this.url.contains("zoho.com")){
+            accountsUrl = "https://accounts.zoho.com";
+        } else if(this.url.contains("zoho.eu")){
+            accountsUrl = "https://accounts.zoho.eu";
+        } else if(this.url.contains("zoho.in")){
+            accountsUrl = "https://accounts.zoho.in";
+        } else {
+            accountsUrl = "https://accounts.csez.zohocorpin.com";
+        }
+        return accountsUrl;
+    }
 
 }
