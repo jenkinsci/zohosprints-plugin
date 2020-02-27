@@ -52,7 +52,23 @@ public class SprintsConnectionConfig extends GlobalConfiguration {
 
     private  boolean isMigrated;
     private Secret zsheader;
+    private String accountsUrl, domain;
 
+    public String getAccountsUrl() {
+        return accountsUrl;
+    }
+
+    public void setAccountsUrl(String accountsUrl) {
+        this.accountsUrl = accountsUrl;
+    }
+
+    public String getDoamin() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
     public String getZsheader() {
         return Secret.toString(zsheader);
     }
@@ -228,6 +244,8 @@ public class SprintsConnectionConfig extends GlobalConfiguration {
                 } else if (reposne.getBoolean("isZuidAvailable")) {
                     setZsheader(reposne.getString("zsheader"));
                 }
+                setAccountsUrl(reposne.optString("accountsurl"));
+                setDomain(reposne.optString("domain"));
                 setMigrated(true);
             } else {
                 setMigrated(false);

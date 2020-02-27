@@ -1,9 +1,15 @@
 package io.jenkins.plugins.sprints;
 
+import hudson.ProxyConfiguration;
 import io.jenkins.plugins.util.OAuthUtil;
 import io.jenkins.plugins.util.Util;
+import jenkins.model.Jenkins;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
@@ -11,8 +17,10 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.ProxyAuthenticationStrategy;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
@@ -227,6 +235,7 @@ public class RequestClient {
         header = OAuthUtil.getOAuthHeader();
     }
 
+
     /**
      *
      * @return String format of response
@@ -253,7 +262,22 @@ public class RequestClient {
                 .setDefaultRequestConfig(config);
 
         if (Util.isProxyConfigured()) {
+            ProxyConfiguration proxy = Jenkins.getInstance().proxy;
+            String hosturl = proxy.name;
+            int port = proxy.port;
+            String uname = proxy.getUserName();
+            String password = proxy.getPassword();
+            HttpHost host = new HttpHost(hosturl, port);
             builder = builder.useSystemProperties();
+            builder.setProxy(host);
+            if(uname != null && password != null){
+                CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+                AuthScope authScope = new AuthScope(host.getHostName(), port);
+                credentialsProvider.setCredentials(authScope, new UsernamePasswordCredentials(uname, password));
+                builder.setDefaultCredentialsProvider(credentialsProvider);
+                builder.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy());
+
+            }
         }
         try (CloseableHttpClient client = builder.build()) {
             CloseableHttpResponse response = client.execute(request);

@@ -1,7 +1,13 @@
 package io.jenkins.plugins.configuration;
 
+import hudson.ExtensionList;
+import jenkins.model.Jenkins;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *@author selvavignesh.m
  * @version 1.0
@@ -42,19 +48,13 @@ public class SprintsConfig {
      * @return Team url
      */
     public String getUrl() {
-        String apiUrl = "https://sprints.zoho.";
-        if(this.url.contains("zoho.com.au")){
-            apiUrl = apiUrl.concat("com.au");
-        } else if(this.url.contains("zoho.com")){
-            apiUrl = apiUrl.concat("com.au");
-        } else if(this.url.contains("zoho.eu")){
-            apiUrl = apiUrl.concat("com.au");
-        } else if(this.url.contains("zoho.in")){
-            apiUrl = apiUrl.concat("com.au");
-        } else {
-            apiUrl = this.url;
+        List<SprintsConnectionConfig> extnList =  new ArrayList<>(Jenkins.getInstance().getExtensionList(SprintsConnectionConfig.class));
+        if (extnList.isEmpty()) {
+            return null;
+
         }
-        return apiUrl;
+        SprintsConnectionConfig conf = extnList.get(0);
+        return conf.getDoamin();
     }
 
     /**
@@ -174,19 +174,13 @@ public class SprintsConfig {
 
     public  String
     getAccountsUrl(){
-        String accountsUrl = null;
-        if(this.url.contains("zoho.com.au")){
-            accountsUrl = "https://accounts.zoho.com.au";
-        } else if(this.url.contains("zoho.com")){
-            accountsUrl = "https://accounts.zoho.com";
-        } else if(this.url.contains("zoho.eu")){
-            accountsUrl = "https://accounts.zoho.eu";
-        } else if(this.url.contains("zoho.in")){
-            accountsUrl = "https://accounts.zoho.in";
-        } else {
-            accountsUrl = "https://accounts.csez.zohocorpin.com";
+        List<SprintsConnectionConfig> extnList =  new ArrayList<>(Jenkins.getInstance().getExtensionList(SprintsConnectionConfig.class));
+        if (extnList.isEmpty()) {
+            return null;
+
         }
-        return accountsUrl;
+        SprintsConnectionConfig conf = extnList.get(0);
+        return conf.getAccountsUrl();
     }
 
 }
