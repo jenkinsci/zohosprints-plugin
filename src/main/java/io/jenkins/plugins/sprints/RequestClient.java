@@ -290,8 +290,6 @@ public class RequestClient {
                     EntityUtils.consume(reponseEntity);
                 }
                 response.close();
-        } catch (IOException e) {
-            LOGGER.log(Level.WARNING, "", e);
         }
         return resp;
     }
