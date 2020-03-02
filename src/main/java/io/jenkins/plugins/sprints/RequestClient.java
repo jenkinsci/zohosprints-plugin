@@ -281,12 +281,14 @@ public class RequestClient {
         }
         try (CloseableHttpClient client = builder.build()) {
             CloseableHttpResponse response = client.execute(request);
-            int respCode = response.getStatusLine().getStatusCode();
-            LOGGER.log(Level.INFO, "Status code {0}", respCode);
-            HttpEntity reponseEntity = response.getEntity();
-            if (reponseEntity != null) {
-                resp = getString(reponseEntity.getContent());
-                EntityUtils.consume(reponseEntity);
+            if(response != null){
+                int respCode = response.getStatusLine().getStatusCode();
+                LOGGER.log(Level.INFO, "Status code {0}", respCode);
+                HttpEntity reponseEntity = response.getEntity();
+                if (reponseEntity != null) {
+                    resp = getString(reponseEntity.getContent());
+                    EntityUtils.consume(reponseEntity);
+                }
             }
             response.close();
         } catch (IOException e) {

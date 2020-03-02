@@ -16,8 +16,12 @@ import java.util.logging.Logger;
 
 public class OAuthUtil {
     private static final Logger logger = Logger.getLogger(OAuthUtil.class.getName());
-    public static String getNewAccessToken(SprintsConfig config) throws Exception {
+    public static synchronized String getNewAccessToken(SprintsConfig config) throws Exception {
         logger.info("New Access token method called");
+        if(config.getAccessTokenUpdatedTime() != null && (System.currentTimeMillis() - config.getAccessTokenUpdatedTime()) <= TimeUnit.MILLISECONDS.convert(50, TimeUnit.MINUTES)){
+            logger.info("Access token already available");
+            return config.getAccessToken();
+        }
         Map<String, Object> param = new HashMap<>();
         String accessToken = null;
         param.put("grant_type", "refresh_token");
