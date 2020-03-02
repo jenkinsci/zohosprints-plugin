@@ -280,8 +280,8 @@ public class RequestClient {
             }
         }
         try (CloseableHttpClient client = builder.build()) {
-            CloseableHttpResponse response = client.execute(request);
-            if(response != null){
+            if(client != null){
+                CloseableHttpResponse response = client.execute(request);
                 int respCode = response.getStatusLine().getStatusCode();
                 LOGGER.log(Level.INFO, "Status code {0}", respCode);
                 HttpEntity reponseEntity = response.getEntity();
@@ -289,8 +289,8 @@ public class RequestClient {
                     resp = getString(reponseEntity.getContent());
                     EntityUtils.consume(reponseEntity);
                 }
+                response.close();
             }
-            response.close();
         } catch (IOException e) {
             LOGGER.log(Level.WARNING, "", e);
         }
