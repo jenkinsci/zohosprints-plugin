@@ -118,9 +118,11 @@ public class RunTimeListener extends RunListener<Run<?, ?>> {
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "", e);
         }
-        LOGGER.info(run.getResult().toString());
         /* SPrints Data push Action*/
         if (Util.isAuthendicated() && checkBuildTypeForUpdate(run)) {
+            if(run.getResult() != null) {
+                LOGGER.info(run.getResult().toString());
+            }
             new Thread(() -> {
                 LOGGER.log(Level.INFO,"Job {0} - #{1}", new Object[]{run.getParent().getFullName(), run.getNumber()});
                 Map<String, Object> buildDatamap = new HashMap<>();

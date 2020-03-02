@@ -458,7 +458,7 @@ public class SprintsWorkAction {
         //SprintActionInterface item = Status.getInstance(build);
         try {
             String itemPrefix = expandContent(build, getListener(), getPrefix()).toUpperCase();
-            String statusStr = expandContent(build, getListener(), getStatus());
+            //String statusStr = expandContent(build, getListener(), getStatus());
            /* item.setPrefix(itemPrefix);
             item.setStatus(statusStr);*/
 

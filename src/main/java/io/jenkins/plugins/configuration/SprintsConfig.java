@@ -79,7 +79,7 @@ public class SprintsConfig {
      * @return delete job api
      */
     public String getJobDeleteUrl() {
-        return url + JOB_DELETE_URL;
+        return getUrl() + JOB_DELETE_URL;
     }
 
     /**
@@ -87,7 +87,7 @@ public class SprintsConfig {
      * @return create job api
      */
     public String getCreateJob() {
-        return url + CREATE_JOB;
+        return getUrl() + CREATE_JOB;
     }
 
     /**
@@ -95,7 +95,7 @@ public class SprintsConfig {
      * @return create build api
      */
     public String getCreateBuild() {
-        return url + CREATE_BUILD;
+        return getUrl() + CREATE_BUILD;
     }
 
     /**
@@ -103,7 +103,7 @@ public class SprintsConfig {
      * @return build push api
      */
     public String getBuildPush() {
-        return url + BUILD_PUSH;
+        return getUrl() + BUILD_PUSH;
     }
 
     /**
@@ -111,7 +111,7 @@ public class SprintsConfig {
      * @return feed push api
      */
     public String getPushFeedStatus() {
-        return url + PUSH_FEED_STATUS;
+        return getUrl() + PUSH_FEED_STATUS;
     }
 
     /**
@@ -127,7 +127,7 @@ public class SprintsConfig {
      * @return update priority api
      */
     public String getUpdateAction() {
-        return url + UPDATE_ACTION;
+        return getUrl() + UPDATE_ACTION;
     }
 
     /**
@@ -143,7 +143,7 @@ public class SprintsConfig {
      * @return update update status api
      */
     public String getStatusAction() {
-        return url + STATUS_ACTION;
+        return getUrl() + STATUS_ACTION;
     }
 
     public String getClientId() {
