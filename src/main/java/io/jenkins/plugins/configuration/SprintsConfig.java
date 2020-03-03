@@ -172,8 +172,7 @@ public class SprintsConfig {
         this.accessTokenUpdatedTime = accessTokenUpdatedTime;
     }
 
-    public  String
-    getAccountsUrl(){
+    public  String getAccountsUrl(){
         List<SprintsConnectionConfig> extnList =  new ArrayList<>(Jenkins.getInstance().getExtensionList(SprintsConnectionConfig.class));
         if (extnList.isEmpty()) {
             return null;
