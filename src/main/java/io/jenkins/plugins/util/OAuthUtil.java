@@ -33,7 +33,8 @@ public class OAuthUtil {
         String resp = client.execute();
         if(resp != null && !resp.isEmpty() && resp.startsWith("{")) {
             JSONObject respObj = new JSONObject(resp);
-            if(respObj.has("access_token")){
+            if(respObj.has("access_token")) {
+                logger.info("New Access token created ");
                 accessToken = respObj.getString("access_token");
                 config.setAccessToken(accessToken);
                 config.setAccessTokenUpdatedTime(System.currentTimeMillis());

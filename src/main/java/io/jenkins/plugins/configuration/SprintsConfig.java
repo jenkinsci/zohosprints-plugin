@@ -2,6 +2,7 @@ package io.jenkins.plugins.configuration;
 
 import hudson.ExtensionList;
 import jenkins.model.Jenkins;
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 
@@ -179,7 +180,22 @@ public class SprintsConfig {
 
         }
         SprintsConnectionConfig conf = extnList.get(0);
-        return conf.getAccountsUrl();
+        String accUrl =  conf.getAccountsUrl();
+        if(StringUtils.isEmpty(accUrl)){
+           String[] split = this.url.split("\\.");
+           int domainLength = split.length;
+           StringBuilder domainUrl = new StringBuilder("https://accounts.");
+           domainUrl.append(split[domainLength -2]);
+            domainUrl.append(".");
+            String domainAppender = split[domainLength-1];
+           if(split[domainLength -1].contains("/")) {
+               domainUrl.append(domainAppender.substring(0, domainAppender.length()-1));
+           } else {
+               domainUrl.append(domainAppender.substring(0, domainAppender.length()));
+           }
+           return domainUrl.toString();
+        }
+        return accUrl;
     }
 
 }
