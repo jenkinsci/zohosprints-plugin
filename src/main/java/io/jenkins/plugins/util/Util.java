@@ -181,27 +181,6 @@ public class Util {
     }
 
     /**
-     *
-     * @param build Abstractbuild object of build
-     * @param listener listener og build
-     * @return List of build job Action
-     */
-    /*public static List<Object> getBuildJobAction(AbstractBuild<?, ?> build, BuildListener listener) {
-        List<Object> list = new ArrayList<>(2);
-        BuildJobAction buildAction = new BuildJobAction(build);
-        BuildJobAction temp = build.getAction(BuildJobAction.class);
-        if (temp != null) {
-            list.add(temp);
-            list.add(false); // if new make it true
-            return list;
-        }
-        //buildAction.setBuildUrl(expandContent(build, listener, "$BUILD_URL"));
-        list.add(buildAction);
-        list.add(true);
-        return list;
-    }*/
-
-    /**
      * While write a messge in console Log Zoho Sprints message alone higlighted with Product name
      * @param message Meesage to parse for Sprints Plugin
      * @return Prepend ZohoSprints in logger
