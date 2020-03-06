@@ -185,10 +185,13 @@ public class SprintsConfig {
            String[] split = this.url.split("\\.");
            int domainLength = split.length;
            StringBuilder domainUrl = new StringBuilder("https://accounts.");
+            if(!this.url.contains("zoho.com") || !this.url.contains("zoho.in") || !this.url.contains("zoho.eu")) {
+                domainUrl.append(split[domainLength-3]).append(".");
+            }
            domainUrl.append(split[domainLength -2]);
             domainUrl.append(".");
-            String domainAppender = split[domainLength-1];
-           if(split[domainLength -1].contains("/")) {
+            String domainAppender = split[domainLength-1].contains(":") ? split[domainLength-1].split(":")[0] : split[domainLength-1];
+           if(domainAppender.contains("/")) {
                domainUrl.append(domainAppender.substring(0, domainAppender.length()-1));
            } else {
                domainUrl.append(domainAppender.substring(0, domainAppender.length()));

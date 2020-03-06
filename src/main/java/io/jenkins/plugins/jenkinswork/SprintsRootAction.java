@@ -49,8 +49,7 @@ public class SprintsRootAction implements RootAction {
             List<SprintsConnectionConfig> extnList =  new ArrayList<>(Jenkins.getInstance().
                                                                 getExtensionList(SprintsConnectionConfig.class));
             SprintsConnectionConfig conf = extnList.get(0);
-            SprintsConfig api = conf.getClient();
-            return  api.getUrl() == null ? "" : api.getUrl();
+            return conf.getDoamin() == null ? "" : conf.getDoamin();
         }
         return "";
     }
