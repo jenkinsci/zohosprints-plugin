@@ -45,12 +45,9 @@ public class SprintsRootAction implements RootAction {
     @CheckForNull
     @Override
     public String getUrlName() {
-        if (Util.isAuthendicated()) {
             List<SprintsConnectionConfig> extnList =  new ArrayList<>(Jenkins.getInstance().
                                                                 getExtensionList(SprintsConnectionConfig.class));
             SprintsConnectionConfig conf = extnList.get(0);
             return conf.getDoamin() == null ? "" : conf.getDoamin();
-        }
-        return "";
     }
 }

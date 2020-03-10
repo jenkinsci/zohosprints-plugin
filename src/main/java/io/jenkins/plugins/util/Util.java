@@ -219,10 +219,7 @@ public class Util {
      * @return If authendicated sprints.svg will return or sprints_icon.svg
      */
     public static String getSprintsIconByAuth() {
-        if (isAuthendicated()) {
             return getResourcePath() + "sprints.svg";
-        }
-        return getResourcePath() + "sprint_icon.svg";
     }
 
     /**
