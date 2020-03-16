@@ -79,14 +79,6 @@ public class ItemChangeListener extends ItemListener {
     @Override
     public void onCreated(Item item) {
         doCreateJob(item);
-        // If it is a normal Item then call the checkFolderJob()
-        // Check create job is Inside the Folder or not
-       /* As of Now using  item.getFullName() method. This method itself bring the entire path name of item.
-        String parentItem = checkFolderJob(item);
-        if(parentItem != null && !parentItem.isEmpty()) {
-            LOGGER.info(parentItem);
-        }*/
-
     }
 
     /**

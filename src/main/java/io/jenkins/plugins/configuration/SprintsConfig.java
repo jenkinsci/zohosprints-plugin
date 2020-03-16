@@ -21,6 +21,7 @@ public class SprintsConfig {
     private static final String JOB_DELETE_URL = "/zsapi/jenkins/createjob/";
     private static final String CREATE_JOB = "/zsapi/jenkins/createjob/";
     private static final String CREATE_BUILD = "/zsapi/jenkins/createbuild/";
+    private static final String DELETE_BUILD = "/zsapi/jenkins/deletebuild/";
     private static final String BUILD_PUSH = "/zsapi/jenkins/buildpush/";
     private static final String PUSH_FEED_STATUS = "/zsapi/jenkins/feedstatus/";
     private static final String CREATE_ISSUE = "/zsapi/jenkins/createissue/";
@@ -97,6 +98,9 @@ public class SprintsConfig {
      */
     public String getCreateBuild() {
         return getUrl() + CREATE_BUILD;
+    }
+    public String getDeleteBuild() {
+        return getUrl() +  DELETE_BUILD;
     }
 
     /**

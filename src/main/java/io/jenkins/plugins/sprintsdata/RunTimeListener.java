@@ -53,7 +53,7 @@ public class RunTimeListener extends RunListener<Run<?, ?>> {
                 buildDatamap.put("queuetime", queueTimeListener.getTimeInQueue());
             }
             buildDatamap.put("name", run.getParent().getFullName());
-           // buildDatamap.put("zapikey", zspojo.getApiToken());
+            buildDatamap.put("action", "createbuild");
             //buildDatamap.put("mailid", zspojo.getMailid());
             buildDatamap.put("number", run.getNumber());
             buildDatamap.put("starttime", run.getStartTimeInMillis());
@@ -73,7 +73,24 @@ public class RunTimeListener extends RunListener<Run<?, ?>> {
      * @param run Run object of the Deleted build
      */
     @Override
-    public void onDeleted(Run<?, ?> run) {  }
+    public void onDeleted(Run<?, ?> run) {
+        List<SprintsConnectionConfig> extnList =  new ArrayList<>(Jenkins.getInstance().getExtensionList(SprintsConnectionConfig.class));
+        SprintsConnectionConfig conf = extnList.get(0);
+        SprintsConfig zspojo = conf.getClient();
+        if (Util.isAuthendicated() && checkBuildTypeForUpdate(run)) {
+            Map<String, Object> buildDatamap = new HashMap<>();
+            buildDatamap.put("name", run.getParent().getFullName());
+            buildDatamap.put("action", "deletebbuild");
+            buildDatamap.put("number", run.getNumber());
+            RequestClient client = new RequestClient(zspojo.getDeleteBuild(), RequestClient.METHOD_DELETE, buildDatamap);
+            try {
+                client.setOAuthHeader();
+                client.execute();
+            } catch (Exception e) {
+                LOGGER.log(Level.WARNING, "", e);
+            }
+        }
+    }
 
     /**
      *
