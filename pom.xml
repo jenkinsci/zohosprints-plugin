@@ -9,11 +9,13 @@
     </parent>
     <groupId>io.jenkins.plugins</groupId>
     <artifactId>zohosprints</artifactId>
-    <version>1.1</version>
+    <version>${revision}${changelist}</version>
     <packaging>hpi</packaging>
     <properties>
+        <revision>3.0.14</revision>
         <jenkins.version>2.7.3</jenkins.version>
         <java.level>8</java.level>
+        <changelist>-SNAPSHOT</changelist>
     </properties>
     <name>Zoho Sprints</name>
     <description>Plugin which wil help to do action from jenkins while running the job</description>
