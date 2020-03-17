@@ -29,7 +29,7 @@ public class SprintsWebHook {
 
     private static final Logger LOGGER = Logger.getLogger(SprintsWebHook.class.getName());
 
-    private static final String ITEM_COMMENT_ACTION = "additemcomment";
+    private static final String ITEM_COMMENT_ACTION = "item";
     private static final String ITEM_UPDATE_STATUS_ACTION = "updatestatus";
     private static final String SPRINT_COMMENT_ACTION = "addsprintcomment";
     private static final String ITEM_UPDATE_PRIORITY = "updatepriority";
@@ -563,10 +563,10 @@ public class SprintsWebHook {
         if(statusArr.length > 1){
             status = statusArr[0];
         }
-        paramMap.put("action", ITEM_UPDATE_STATUS_ACTION);
+      //  paramMap.put("action", ITEM_UPDATE_STATUS_ACTION);
         paramMap.put("status", status);
         paramMap.put("prefix", URLEncoder.encode(makeListAsString(prefixList), RequestClient.CHARSET));
-        return getClient(config.getUpdateAction(), RequestClient.METHOD_POST).execute();
+        return getClient(config.getUpdateAction(ITEM_UPDATE_STATUS_ACTION), RequestClient.METHOD_POST).execute();
     }
 
     /**
@@ -615,10 +615,10 @@ public class SprintsWebHook {
         if (prefixList.isEmpty()) {
             throw new Exception("Invalid prefix given for Item Priority update");
         }
-        paramMap.put("action", ITEM_UPDATE_PRIORITY);
+        //paramMap.put("action", ITEM_UPDATE_PRIORITY);
         paramMap.put("priority", priority);
         paramMap.put("prefix", URLEncoder.encode(makeListAsString(prefixList), RequestClient.CHARSET));
-        return getClient(config.getUpdateAction(), RequestClient.METHOD_POST).execute();
+        return getClient(config.getUpdateAction(ITEM_UPDATE_PRIORITY), RequestClient.METHOD_POST).execute();
     }
 
     /**
@@ -646,10 +646,10 @@ public class SprintsWebHook {
             taskListener.error(sprintsLogparser("Empty prefix"));
             return null;
         }
-        paramMap.put("action", ITEM_COMMENT_ACTION);
+       // paramMap.put("action", ITEM_COMMENT_ACTION);
         paramMap.put("note", notes);
         paramMap.put("prefix", URLEncoder.encode(makeListAsString(prefixList), RequestClient.CHARSET));
-       return getClient(config.getAddComment(), RequestClient.METHOD_POST).execute();
+       return getClient(config.getAddComment(ITEM_COMMENT_ACTION), RequestClient.METHOD_POST).execute();
     }
 
     /**

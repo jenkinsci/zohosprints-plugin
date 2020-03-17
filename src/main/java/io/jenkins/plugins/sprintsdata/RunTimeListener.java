@@ -79,8 +79,8 @@ public class RunTimeListener extends RunListener<Run<?, ?>> {
         SprintsConfig zspojo = conf.getClient();
         if (Util.isAuthendicated() && checkBuildTypeForUpdate(run)) {
             Map<String, Object> buildDatamap = new HashMap<>();
+            buildDatamap.put("action", "delete");
             buildDatamap.put("name", run.getParent().getFullName());
-            buildDatamap.put("action", "deletebbuild");
             buildDatamap.put("number", run.getNumber());
             RequestClient client = new RequestClient(zspojo.getDeleteBuild(), RequestClient.METHOD_DELETE, buildDatamap);
             try {
@@ -145,9 +145,8 @@ public class RunTimeListener extends RunListener<Run<?, ?>> {
                     QueueTimeListener queueTimeListener = extensionList.get(0);
                     buildDatamap.put("queuetime", queueTimeListener.getTimeInQueue());
                 }
+                //buildDatamap.put("action", "add");
                 buildDatamap.put("name", run.getParent().getFullName());
-               // buildDatamap.put("zapikey", api.getApiToken());
-               // buildDatamap.put("mailid", api.getMailid());
                 buildDatamap.put("number", run.getNumber());
                 buildDatamap.put("starttime", run.getStartTimeInMillis());
                 buildDatamap.put("jenkinuser", Util.getBuildTriggererUserId(run));
@@ -161,7 +160,7 @@ public class RunTimeListener extends RunListener<Run<?, ?>> {
                     buildDatamap.put("branch", branch);
                 }
                 try {
-                    RequestClient client = new RequestClient(api.getBuildPush(), RequestClient.METHOD_POST, buildDatamap, headerMap);
+                    RequestClient client = new RequestClient(api.getBuildPush(), RequestClient.METHOD_POST, buildDatamap);
                     client.setAttachment(buildLogMap);
                     client.setOAuthHeader();
                     client.execute();

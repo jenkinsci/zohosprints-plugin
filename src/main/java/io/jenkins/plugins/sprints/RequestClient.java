@@ -31,6 +31,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -179,6 +180,7 @@ public class RequestClient {
     private HttpEntityEnclosingRequestBase setJSONBodyEntity(final HttpEntityEnclosingRequestBase reqobject) {
         Object jsonBodyContent = param != null && !param.isEmpty() ? new JSONObject(param) : jsonArrayBodyContent;
         StringEntity entity = new StringEntity(jsonBodyContent.toString(), ContentType.APPLICATION_JSON);
+        LOGGER.info(jsonBodyContent.toString());
         reqobject.setEntity(entity);
         return reqobject;
     }
@@ -205,7 +207,11 @@ public class RequestClient {
                 return post;
             } else {
                 HttpDelete delete = new HttpDelete(url);
-                if (!param.isEmpty()) {
+                if(isJSONBodyContent){
+                    HttpDeleteWithBody deleteWithBody = new HttpDeleteWithBody(url);
+                    deleteWithBody = (HttpDeleteWithBody) setJSONBodyEntity(deleteWithBody);
+                    return deleteWithBody;
+                } else if (!param.isEmpty()) {
                     delete = constructUrl(delete);
                 }
                 return delete;
@@ -235,7 +241,6 @@ public class RequestClient {
         header = OAuthUtil.getOAuthHeader();
     }
 
-
     /**
      *
      * @return String format of response
@@ -250,7 +255,7 @@ public class RequestClient {
         if (isJSONBodyContent) {
             request.setHeader("Content-type", ContentType.APPLICATION_JSON.getMimeType()); //NO I18N
         } else if(request.getHeaders("Content-type") == null) {//NO I18N
-            request.setHeader("Content-type", "application/x-www-form-urlencoded; charset=" + CHARSET); //NO I18N
+            request.setHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8"); //no i18n
         }
         RequestConfig config = RequestConfig
                 .custom()
@@ -394,5 +399,15 @@ public class RequestClient {
             stream.close();
         }
         return null;
+    }
+
+    private class HttpDeleteWithBody extends HttpEntityEnclosingRequestBase {
+        private static final String METHOD_NAME = "DELETE";//no i18n
+        public String getMethod() { return METHOD_NAME; }
+
+        public HttpDeleteWithBody(final String uri) {
+            super();
+            setURI(URI.create(uri));
+        }
     }
 }

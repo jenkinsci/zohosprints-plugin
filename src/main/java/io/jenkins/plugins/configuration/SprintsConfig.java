@@ -2,7 +2,7 @@ package io.jenkins.plugins.configuration;
 
 import hudson.ExtensionList;
 import jenkins.model.Jenkins;
-import org.apache.commons.lang.StringUtils;
+import static org.apache.commons.lang.StringUtils.isEmpty;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 
@@ -26,7 +26,7 @@ public class SprintsConfig {
     private static final String PUSH_FEED_STATUS = "/zsapi/jenkins/feedstatus/";
     private static final String CREATE_ISSUE = "/zsapi/jenkins/createissue/";
     private static final String UPDATE_ACTION = "/zsapi/jenkins/update/";
-    private static final String ADD_COMMENT = "/zsapi/jenkins/addcomment/";
+    private static final String ADD_COMMENT = "/zsapi/jenkins/comment/";
     private static final String STATUS_ACTION = "/zsapi/jenkins/status/";
 
     /**
@@ -131,15 +131,21 @@ public class SprintsConfig {
      *
      * @return update priority api
      */
-    public String getUpdateAction() {
-        return getUrl() + UPDATE_ACTION;
+    public String getUpdateAction(String operationValue) {
+        if(isEmpty(operationValue)){
+            return getUrl() + UPDATE_ACTION;
+        }
+        return getUrl() + UPDATE_ACTION + "?action=" +operationValue;
     }
 
     /**
      *
      * @return add comment api
      */
-    public String getAddComment() {
+    public String getAddComment(String operationValue) {
+        if(operationValue != null) {
+            return url + ADD_COMMENT+ "?action="+operationValue;
+        }
         return url + ADD_COMMENT;
     }
 
@@ -185,7 +191,7 @@ public class SprintsConfig {
         }
         SprintsConnectionConfig conf = extnList.get(0);
         String accUrl =  conf.getAccountsUrl();
-        if(StringUtils.isEmpty(accUrl)){
+        if(isEmpty(accUrl)){
            String[] split = this.url.split("\\.");
            int domainLength = split.length;
            StringBuilder domainUrl = new StringBuilder("https://accounts.");
