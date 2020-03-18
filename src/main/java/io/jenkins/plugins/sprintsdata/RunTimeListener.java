@@ -109,8 +109,6 @@ public class RunTimeListener extends RunListener<Run<?, ?>> {
         List<SprintsConnectionConfig> extnList =  new ArrayList<>(Jenkins.getInstance().getExtensionList(SprintsConnectionConfig.class));
         SprintsConnectionConfig conf = extnList.get(0);
         SprintsConfig api = conf.getClient();
-        Map<String, String> headerMap = new HashMap<>();
-        headerMap.put("X-ZS-JENKINS-ID", conf.getZsheader());
         try {
             EnvVars envVars = run.getEnvironment(listener);
             Boolean isIssueCreateConfigured = envVars.containsKey("SPRINTS_ISSUE_BUILD_ENVIRONMENT_AVAILABLE");

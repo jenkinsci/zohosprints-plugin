@@ -48,7 +48,7 @@ public class RequestClient {
     public static final String METHOD_GET = "get";
     public static final String METHOD_POST = "post";
     public static final String METHOD_DELETE = "delete";
-    public  static final String CHARSET = "UTF-8";
+    public static final String CHARSET = "UTF-8";
     private String url = null;
     private String method = null;
     private Map<String, Object> param = new HashMap<>();
@@ -59,7 +59,6 @@ public class RequestClient {
     private JSONObject paramJson = null;
 
     /**
-     *
      * @param paramMap Query param of API
      * @return Instance of Class
      */
@@ -69,7 +68,6 @@ public class RequestClient {
     }
 
     /**
-     *
      * @return JSONArray
      */
     public JSONArray getJsonArrayBodyContent() {
@@ -77,7 +75,6 @@ public class RequestClient {
     }
 
     /**
-     *
      * @param jsonArrayBodyContentArr JSONType param
      */
     public void setJsonArrayBodyContent(final JSONArray jsonArrayBodyContentArr) {
@@ -85,7 +82,6 @@ public class RequestClient {
     }
 
     /**
-     *
      * @param jsonBodyContent JSONType param
      * @return Instance of Class
      */
@@ -95,7 +91,6 @@ public class RequestClient {
     }
 
     /**
-     *
      * @param fromAttachmentMap attachment File
      * @return Instance of Class
      */
@@ -105,8 +100,7 @@ public class RequestClient {
     }
 
     /**
-     *
-     * @param fromurl Sprints API
+     * @param fromurl    Sprints API
      * @param frommethod Type of API call
      */
     public RequestClient(String fromurl, String frommethod) {
@@ -134,10 +128,9 @@ public class RequestClient {
 //    }
 
     /**
-     *
-     * @param fromurl Sprints API
+     * @param fromurl    Sprints API
      * @param frommethod Type of API call
-     * @param fromparam Query param of API
+     * @param fromparam  Query param of API
      */
     public RequestClient(final String fromurl, final String frommethod, final Map<String, Object> fromparam) {
         this.url = fromurl;
@@ -146,9 +139,8 @@ public class RequestClient {
     }
 
     /**
-     *
-     * @param fromurl Sprints API
-     * @param frommethod Type of API call
+     * @param fromurl                  Sprints API
+     * @param frommethod               Type of API call
      * @param fromjsonArrayBodyContent JSONType param
      */
     public RequestClient(final String fromurl, final String frommethod, final JSONArray fromjsonArrayBodyContent) {
@@ -159,10 +151,9 @@ public class RequestClient {
     }
 
     /**
-     *
-     * @param fromurl Sprints API
+     * @param fromurl    Sprints API
      * @param frommethod Type of API call
-     * @param fromparam Query param of API
+     * @param fromparam  Query param of API
      * @param fromheader Header param of API
      */
     public RequestClient(final String fromurl, final String frommethod, final Map<String, Object> fromparam, final Map<String, String> fromheader) {
@@ -173,7 +164,6 @@ public class RequestClient {
     }
 
     /**
-     *
      * @param reqobject RequestBase Object
      * @return HttpEntityEnclosingRequestBase function
      */
@@ -186,9 +176,8 @@ public class RequestClient {
     }
 
     /**
-     *
      * @return HttpUriRequest function
-     * @throws Exception  Throws when any error occurs
+     * @throws Exception Throws when any error occurs
      */
     private HttpUriRequest getMethod() throws Exception {
 
@@ -207,11 +196,7 @@ public class RequestClient {
                 return post;
             } else {
                 HttpDelete delete = new HttpDelete(url);
-                if(isJSONBodyContent){
-                    HttpDeleteWithBody deleteWithBody = new HttpDeleteWithBody(url);
-                    deleteWithBody = (HttpDeleteWithBody) setJSONBodyEntity(deleteWithBody);
-                    return deleteWithBody;
-                } else if (!param.isEmpty()) {
+                if (!param.isEmpty()) {
                     delete = constructUrl(delete);
                 }
                 return delete;
@@ -221,7 +206,6 @@ public class RequestClient {
     }
 
     /**
-     *
      * @param httpreq httpUriRequest Object
      * @return HttpUriRequest function
      * @throws Exception Throws when any error occurs
@@ -242,11 +226,10 @@ public class RequestClient {
     }
 
     /**
-     *
      * @return String format of response
      * @throws Exception Throws when any error occurs
      */
-    public String execute() throws  Exception {
+    public String execute() throws Exception {
         int connectionTimeOut = 30000;
         int socketTimeOut = 30000;
         String resp = "";
@@ -254,7 +237,7 @@ public class RequestClient {
         request = this.setHeader(request);
         if (isJSONBodyContent) {
             request.setHeader("Content-type", ContentType.APPLICATION_JSON.getMimeType()); //NO I18N
-        } else if(request.getHeaders("Content-type") == null) {//NO I18N
+        } else if (request.getHeaders("Content-type") == null) {//NO I18N
             request.setHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8"); //no i18n
         }
         RequestConfig config = RequestConfig
@@ -275,7 +258,7 @@ public class RequestClient {
             HttpHost host = new HttpHost(hosturl, port);
             builder = builder.useSystemProperties();
             builder.setProxy(host);
-            if(uname != null && password != null){
+            if (uname != null && password != null) {
                 CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
                 AuthScope authScope = new AuthScope(host.getHostName(), port);
                 credentialsProvider.setCredentials(authScope, new UsernamePasswordCredentials(uname, password));
@@ -298,10 +281,10 @@ public class RequestClient {
         } catch (IOException e) {
             LOGGER.log(Level.WARNING, "", e);
         } finally {
-            if(client != null) {
+            if (client != null) {
                 client.close();
             }
-            if(response != null) {
+            if (response != null) {
                 response.close();
             }
         }
@@ -309,11 +292,10 @@ public class RequestClient {
     }
 
     /**
-     *
      * @param get HttpGet Object
      * @return HttpGet function
      */
-    private HttpGet  constructUrl(HttpGet get) {
+    private HttpGet constructUrl(HttpGet get) {
         List<NameValuePair> list = new ArrayList<>();
         for (Map.Entry<String, Object> entry : param.entrySet()) {
             String key = entry.getKey();
@@ -325,7 +307,6 @@ public class RequestClient {
     }
 
     /**
-     *
      * @param delete HttpDelete Object
      * @return HttpDelete function
      */
@@ -341,10 +322,9 @@ public class RequestClient {
     }
 
     /**
-     *
      * @param post HttpPost Object
      * @throws UnsupportedEncodingException Throws when unsupported Encoding happens
-     * @throws JSONException Throws when JSON related error happen
+     * @throws JSONException                Throws when JSON related error happen
      */
     private void setEntity(HttpPost post) throws UnsupportedEncodingException, JSONException {
         if (this.attachment != null && !this.attachment.isEmpty()) {
@@ -378,7 +358,6 @@ public class RequestClient {
     }
 
     /**
-     *
      * @param stream Stream of the response
      * @return String format of response
      * @throws IOException Throws when error occurs at read/write
@@ -387,7 +366,7 @@ public class RequestClient {
         try (ByteArrayOutputStream result = new ByteArrayOutputStream()) {
             byte[] buffer = new byte[1024];
 
-            for (int length = 0; (length = stream.read(buffer)) > 0;) {
+            for (int length = 0; (length = stream.read(buffer)) > 0; ) {
                 result.write(buffer, 0, length);
             }
 
@@ -401,13 +380,4 @@ public class RequestClient {
         return null;
     }
 
-    private class HttpDeleteWithBody extends HttpEntityEnclosingRequestBase {
-        private static final String METHOD_NAME = "DELETE";//no i18n
-        public String getMethod() { return METHOD_NAME; }
-
-        public HttpDeleteWithBody(final String uri) {
-            super();
-            setURI(URI.create(uri));
-        }
-    }
 }
