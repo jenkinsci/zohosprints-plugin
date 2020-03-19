@@ -142,7 +142,7 @@ public class SprintsConnectionConfig extends GlobalConfiguration {
 
     /**
      *
-     * @return List<SprintsConnection> List of Sprints Connection
+     * @return List of Sprints Connection
      */
     public List<SprintsConnection> getConnections() {
         return connections;

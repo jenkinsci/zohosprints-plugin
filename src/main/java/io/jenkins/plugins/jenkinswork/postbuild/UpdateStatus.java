@@ -45,7 +45,7 @@ public class UpdateStatus extends Recorder {
 
     /**
      *
-     * @return
+     * @return Need to monitor a build step or not
      */
     @Override
     public BuildStepMonitor getRequiredMonitorService() {

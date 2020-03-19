@@ -96,7 +96,7 @@ public class UpdatePriority extends Recorder {
     public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
         /**
          *
-         * @param jobType
+         * @param jobType type of job which is using the step
          * @return All jobs able to use this plugin
          */
         @Override
