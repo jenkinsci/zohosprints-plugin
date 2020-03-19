@@ -9,7 +9,7 @@
     </parent>
     <groupId>io.jenkins.plugins</groupId>
     <artifactId>zohosprints</artifactId>
-    <version>1.0</version>
+    <version>${revision}${changelist}s</version>
     <packaging>hpi</packaging>
     <properties>
         <revision>1.0</revision>
