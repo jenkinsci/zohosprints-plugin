@@ -89,7 +89,7 @@ public class SprintsConnectionConfig extends GlobalConfiguration {
      * @param req stapler request Object
      * @param json Contains value and key
      * @return true/false
-     * @throws FormException
+     * @throws FormException if querying of form throws an error
      */
     @Override
     public boolean configure(StaplerRequest req, JSONObject json) throws FormException {
@@ -142,7 +142,7 @@ public class SprintsConnectionConfig extends GlobalConfiguration {
 
     /**
      *
-     * @return List<SprintsConnection>
+     * @return List<SprintsConnection> List of Sprints Connection
      */
     public List<SprintsConnection> getConnections() {
         return connections;
@@ -150,7 +150,7 @@ public class SprintsConnectionConfig extends GlobalConfiguration {
 
     /**
      *
-     * @return SprintsConfig
+     * @return SprintsConfig Curretn sprints connection
      */
     public SprintsConfig getClient() {
         for (Map.Entry<String, SprintsConnection> entry : connectionMap.entrySet()) {

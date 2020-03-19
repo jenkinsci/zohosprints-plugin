@@ -80,7 +80,7 @@ public class AddComment extends Builder {
      * @param launcher launcher is responsible for inheriting environment variables
      * @param listener Receives events that happen during a build
      * @return if build success then true, else false
-     * @throws UnsupportedEncodingException
+     * @throws UnsupportedEncodingException if the character encoding is not supported
      */
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher,
@@ -154,7 +154,7 @@ public class AddComment extends Builder {
          *
          * @param req Stapler request object
          * @param json Contains value and key
-         * @return
+         * @return true on successful save or false
          */
         @Override
         public boolean configure(StaplerRequest req, JSONObject json) {

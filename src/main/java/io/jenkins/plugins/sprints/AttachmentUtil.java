@@ -103,7 +103,7 @@ public class AttachmentUtil {
      *
      * @param stream InputStream of the Log file
      * @return InputStream of file
-     * @throws IOException
+     * @throws IOException Input/Output error
      */
     public InputStream getLogFileContennt(InputStream stream) throws IOException {
         StringBuilder logContent = new StringBuilder();
@@ -126,7 +126,7 @@ public class AttachmentUtil {
      *
      * @param filename Filename of the log file
      * @return part of file
-     * @throws IOException
+     * @throws IOException Input/Output error
      */
     public Part[] getLogAttachment(final String filename) throws IOException {
 

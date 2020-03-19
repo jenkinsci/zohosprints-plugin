@@ -33,7 +33,10 @@ public class SprintsConfig {
      *
      * @param fromurl - Sprints team url
      * @param frommailid - team mail id
-     * @param redirectUrl - api token
+     * @param redirectUrl - OAuth redirection URL
+     * @param clientid - OAuth client ID
+     * @param clientSecret - OAuth client secret
+     * @param refreshToken - OAuth refresh token
      */
     @Restricted(NoExternalUse.class)
     public SprintsConfig(final String fromurl, final String frommailid, final String redirectUrl, final String clientid, final String clientSecret, final String refreshToken ) {
@@ -129,7 +132,8 @@ public class SprintsConfig {
 
     /**
      *
-     * @return update priority api
+     * @param operationValue - action param
+     * @return update API_END point
      */
     public String getUpdateAction(String operationValue) {
         if(isEmpty(operationValue)){
@@ -139,7 +143,7 @@ public class SprintsConfig {
     }
 
     /**
-     *
+     *@param operationValue - action param
      * @return add comment api
      */
     public String getAddComment(String operationValue) {

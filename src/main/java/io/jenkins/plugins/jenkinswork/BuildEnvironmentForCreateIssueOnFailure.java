@@ -106,8 +106,8 @@ public class BuildEnvironmentForCreateIssueOnFailure extends SimpleBuildWrapper 
      * @param launcher Responsible for inherit the Global Variable
      * @param listener Listener Objetc of Task
      * @param initialEnvironment Environmental Variables
-     * @throws IOException
-     * @throws InterruptedException
+     * @throws InterruptedException when a thread that is sleeping, waiting, or is occupied is interrupted
+     * @throws IOException Input/Output error
      */
     @Override
     public void setUp(Context context, Run<?, ?> build, FilePath workspace, Launcher launcher,
@@ -253,7 +253,7 @@ public class BuildEnvironmentForCreateIssueOnFailure extends SimpleBuildWrapper 
          * @param req request obj
          * @param json Object which contains values and key
          * @return true/false
-         * @throws FormException
+         * @throws FormException if querying of form throws an error
          */
         @Override
         public boolean configure(StaplerRequest req, JSONObject json) throws FormException {

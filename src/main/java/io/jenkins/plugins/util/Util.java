@@ -207,7 +207,7 @@ public class Util {
 
     /**
      * It will get Resourse path of Plugin
-     * Path like "/plugin/<artifect-id>/"
+     * Path like /plugin/artifect-id/
      * @return plugin resource path
      */
     public static String getResourcePath() {

@@ -39,6 +39,13 @@ public class SprintsDataMigration {
      * @param fromportal portal url
      * @param header admin mail id
      */
+    /**
+     *
+     * @param fromitemList All items to be migrate
+     * @param fromportal portal url
+     * @param header admin mail id
+     * @param accessToken accesstoken to het
+     */
     public SprintsDataMigration(final List<Item> fromitemList,  final String fromportal, final String header, final String accessToken) {
         this.itemList = fromitemList;
         this.portal = fromportal;

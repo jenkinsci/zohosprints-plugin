@@ -66,7 +66,7 @@ public class QueueTimeListener extends QueueListener {
 
     /**
      *
-     * @param li
+     * @param li Item which left from the queue
      */
     @Override
     public void onLeft(final Queue.LeftItem li) {

@@ -79,8 +79,8 @@ public class UpdateStatus extends Recorder {
      * @param launcher launcher is responsible for inheriting environment variables
      * @param listener Receives events that happen during a build
      * @return if build success then true, else false
-     * @throws InterruptedException
-     * @throws IOException
+     * @throws InterruptedException when a thread that is sleeping, waiting, or is occupied is interrupted
+     * @throws IOException Input/Output error
      */
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener)
@@ -95,7 +95,7 @@ public class UpdateStatus extends Recorder {
     public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
         /**
          *
-         * @param jobType
+         * @param jobType type of job
          * @return All jobs able to use this plugin
          */
         @Override
@@ -134,7 +134,7 @@ public class UpdateStatus extends Recorder {
          * @param req staplerrequest Object
          * @param json Contains value and key
          * @return true/false
-         * @throws FormException
+         * @throws FormException if querying of form throws an error
          */
         @Override
         public boolean configure(StaplerRequest req, JSONObject json) throws FormException {

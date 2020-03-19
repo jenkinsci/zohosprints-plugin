@@ -78,7 +78,7 @@ public class SprintsParameter extends ParameterDefinition {
      *
      * @param req request Object
      * @param jo Contains value and key
-     * @return
+     * @return ParameterValue
      */
     @CheckForNull
     @Override
@@ -106,7 +106,7 @@ public class SprintsParameter extends ParameterDefinition {
     /**
      *
      * @return List Of Project Object
-     * @throws Exception
+     * @throws Exception To throw error when error ocured in run time
      */
     public List<String> getStatus() throws Exception {
         if (!StringUtils.isAlphanumeric(sprintsProjectKey)) {

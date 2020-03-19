@@ -20,7 +20,7 @@ public interface SprintsApiToken extends StandardCredentials {
     class NameProvider extends CredentialsNameProvider<SprintsApiToken> {
         /**
          *
-         * @param c
+         * @param c Credential ID
          * @return String
          */
         @Override

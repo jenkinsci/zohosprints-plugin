@@ -104,7 +104,7 @@ public class ItemStatusUpdateStep extends AbstractStepImpl {
         /**
          *
          * @return Void
-         * @throws Exception
+         * @throws Exception   when exception occurred during rest call
          */
         @Override
         protected Void run() throws Exception {
