@@ -540,7 +540,7 @@ public class SprintsWorkAction {
             String respString = respObj != null ? (String) respObj : null;
             if (respString != null && !respString.isEmpty()) {
                 isSuccess = true;
-                listener.getLogger().println(parseLogMessage("Updated Status for following Items " + respString));
+                listener.getLogger().println(parseLogMessage("Updated Priority for following Items " + respString));
                 //item.setPriorityUpdateItem(respString.substring(1, respString.length() - 1));
             } else {
                 listener.error(parseLogMessage("None of the Item priority updated"));
