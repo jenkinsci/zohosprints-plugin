@@ -10,6 +10,7 @@ import hudson.Extension;
 import hudson.model.Item;
 import hudson.scheduler.Hash;
 import hudson.security.ACL;
+import hudson.security.Permission;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 import hudson.util.Secret;
@@ -268,7 +269,7 @@ public class SprintsConnectionConfig extends GlobalConfiguration {
      * @return ListBoxModel
      */
     public ListBoxModel doFillApiTokenIdItems(@QueryParameter String name, @QueryParameter String url) {
-        if (Jenkins.getInstance().hasPermission(Item.CONFIGURE)) {
+        if (Jenkins.getInstance().hasPermission(Jenkins.ADMINISTER)) {
             AbstractIdCredentialsListBoxModel<StandardListBoxModel, StandardCredentials> options = new StandardListBoxModel()
                     .includeEmptyValue()
                     .includeMatchingAs(ACL.SYSTEM,
