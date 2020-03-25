@@ -105,7 +105,7 @@ public class RunTimeListener extends RunListener<Run<?, ?>> {
      * @param listener Completed Build's listener Object of the task
      */
     @Override
-    @SuppressWarnings(value="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
     public void onCompleted(final Run<?, ?> run, @Nonnull final TaskListener listener) {
         try {
             EnvVars envVars = run.getEnvironment(listener);
