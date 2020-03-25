@@ -105,6 +105,7 @@ public class RunTimeListener extends RunListener<Run<?, ?>> {
      * @param listener Completed Build's listener Object of the task
      */
     @Override
+    @SuppressWarnings(value="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
     public void onCompleted(final Run<?, ?> run, @Nonnull final TaskListener listener) {
         try {
             EnvVars envVars = run.getEnvironment(listener);
@@ -145,6 +146,7 @@ public class RunTimeListener extends RunListener<Run<?, ?>> {
                 buildDatamap.put("starttime", run.getStartTimeInMillis());
                 buildDatamap.put("jenkinuser", Util.getBuildTriggererUserId(run));
                 buildDatamap.put("duration", run.getDuration());
+
                 buildDatamap.put("result", run.getResult().toString());
                 buildDatamap.put("estimatedduration", run.getEstimatedDuration());
                 HashMap<String, AttachmentUtil> buildLogMap = new HashMap<>();
