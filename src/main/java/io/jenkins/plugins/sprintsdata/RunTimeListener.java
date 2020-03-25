@@ -97,7 +97,7 @@ public class RunTimeListener extends RunListener<Run<?, ?>> {
      */
     @Override
     public void onFinalized(Run<?, ?> run) {
-        if (Util.isAuthendicated() && checkBuildTypeForUpdate(run)) {
+        if (Util.isAuthendicated() && checkBuildTypeForUpdate(run) && run.getResult() != null) {
             List<SprintsConnectionConfig> extnList =  new ArrayList<>(Jenkins.getInstance().getExtensionList(SprintsConnectionConfig.class));
             SprintsConnectionConfig conf = extnList.get(0);
             SprintsConfig api = conf.getClient();
@@ -143,9 +143,6 @@ public class RunTimeListener extends RunListener<Run<?, ?>> {
      */
     @Override
     public void onCompleted(final Run<?, ?> run, @Nonnull final TaskListener listener) {
-        List<SprintsConnectionConfig> extnList =  new ArrayList<>(Jenkins.getInstance().getExtensionList(SprintsConnectionConfig.class));
-        SprintsConnectionConfig conf = extnList.get(0);
-        SprintsConfig api = conf.getClient();
         try {
             EnvVars envVars = run.getEnvironment(listener);
             Boolean isIssueCreateConfigured = envVars.containsKey("SPRINTS_ISSUE_BUILD_ENVIRONMENT_AVAILABLE");
