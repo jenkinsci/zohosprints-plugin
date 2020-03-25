@@ -21,7 +21,7 @@
           <f:advanced>
             <st:include page="configure-advanced.jelly" optional="true" />
           </f:advanced>
-          <f:validateButton title="${%Test Connection}" progress="${progress}" method="testConnection"
+          <f:validateButton title="${%Authenticate and Migrate}" progress="${progress}" method="testConnection"
                             with="apiTokenId,url,mailid"/>
           <f:entry title="">
             <div align="right">
