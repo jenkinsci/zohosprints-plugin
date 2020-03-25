@@ -96,44 +96,7 @@ public class RunTimeListener extends RunListener<Run<?, ?>> {
      * @param run Run object of the Finalised build
      */
     @Override
-    public void onFinalized(Run<?, ?> run) {
-        if (Util.isAuthendicated() && checkBuildTypeForUpdate(run) && run.getResult() != null) {
-            List<SprintsConnectionConfig> extnList =  new ArrayList<>(Jenkins.getInstance().getExtensionList(SprintsConnectionConfig.class));
-            SprintsConnectionConfig conf = extnList.get(0);
-            SprintsConfig api = conf.getClient();
-            TaskListener listener = TaskListener.NULL;
-            //  new Thread(() -> {
-            LOGGER.log(Level.INFO,"Job {0} - #{1} Ended", new Object[]{run.getParent().getFullName(), run.getNumber()});
-            Map<String, Object> buildDatamap = new HashMap<>();
-            ExtensionList<QueueTimeListener> extensionList = Jenkins.getInstance().getExtensionList(QueueTimeListener.class);
-            if (extensionList != null && !extensionList.isEmpty()) {
-                QueueTimeListener queueTimeListener = extensionList.get(0);
-                buildDatamap.put("queuetime", queueTimeListener.getTimeInQueue());
-            }
-            buildDatamap.put("name", run.getParent().getFullName());
-            buildDatamap.put("number", run.getNumber());
-            buildDatamap.put("starttime", run.getStartTimeInMillis());
-            buildDatamap.put("jenkinuser", Util.getBuildTriggererUserId(run));
-            buildDatamap.put("duration", run.getDuration());
-            buildDatamap.put("result", run.getResult().toString());
-            buildDatamap.put("estimatedduration", run.getEstimatedDuration());
-            HashMap<String, AttachmentUtil> buildLogMap = new HashMap<>();
-            buildLogMap.put("uploadfile", new AttachmentUtil(run,listener));
-            String branch = expandContent(run, listener);
-            if (branch != null) {
-                buildDatamap.put("branch", branch);
-            }
-            try {
-                RequestClient client = new RequestClient(api.getBuildPush(), RequestClient.METHOD_POST, buildDatamap);
-                client.setAttachment(buildLogMap);
-                client.setOAuthHeader();
-                client.execute();
-            } catch (Exception e) {
-                LOGGER.log(Level.WARNING,  "", e);
-            }
-            //  }).start();
-        }
-    }
+    public void onFinalized(Run<?, ?> run) { }
 
 
     /**
@@ -162,6 +125,43 @@ public class RunTimeListener extends RunListener<Run<?, ?>> {
                     } else {
                         listener.getLogger().println(sprintsLogparser("Item not created on Build Failure"));
                     }
+            }
+
+            if (Util.isAuthendicated() && checkBuildTypeForUpdate(run)) {
+                List<SprintsConnectionConfig> extnList =  new ArrayList<>(Jenkins.getInstance().getExtensionList(SprintsConnectionConfig.class));
+                SprintsConnectionConfig conf = extnList.get(0);
+                SprintsConfig api = conf.getClient();
+              //  TaskListener listener = TaskListener.NULL;
+                //  new Thread(() -> {
+                LOGGER.log(Level.INFO,"Job {0} - #{1} Ended", new Object[]{run.getParent().getFullName(), run.getNumber()});
+                Map<String, Object> buildDatamap = new HashMap<>();
+                ExtensionList<QueueTimeListener> extensionList = Jenkins.getInstance().getExtensionList(QueueTimeListener.class);
+                if (extensionList != null && !extensionList.isEmpty()) {
+                    QueueTimeListener queueTimeListener = extensionList.get(0);
+                    buildDatamap.put("queuetime", queueTimeListener.getTimeInQueue());
+                }
+                buildDatamap.put("name", run.getParent().getFullName());
+                buildDatamap.put("number", run.getNumber());
+                buildDatamap.put("starttime", run.getStartTimeInMillis());
+                buildDatamap.put("jenkinuser", Util.getBuildTriggererUserId(run));
+                buildDatamap.put("duration", run.getDuration());
+                buildDatamap.put("result", run.getResult().toString());
+                buildDatamap.put("estimatedduration", run.getEstimatedDuration());
+                HashMap<String, AttachmentUtil> buildLogMap = new HashMap<>();
+                buildLogMap.put("uploadfile", new AttachmentUtil(run,listener));
+                String branch = expandContent(run, listener);
+                if (branch != null) {
+                    buildDatamap.put("branch", branch);
+                }
+                try {
+                    RequestClient client = new RequestClient(api.getBuildPush(), RequestClient.METHOD_POST, buildDatamap);
+                    client.setAttachment(buildLogMap);
+                    client.setOAuthHeader();
+                    client.execute();
+                } catch (Exception e) {
+                    LOGGER.log(Level.WARNING,  "", e);
+                }
+                //  }).start();
             }
 
         } catch (Exception e) {
