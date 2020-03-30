@@ -1,5 +1,6 @@
 package io.jenkins.plugins.sprints;
 
+import hudson.matrix.MatrixRun;
 import hudson.model.BuildListener;
 import hudson.model.Run;
 import hudson.model.TaskListener;
@@ -339,8 +340,13 @@ public class SprintsWebHook {
      * @return Instance of Class
      */
     private SprintsWebHook doInitParamMap() {
-      //  doInitCommonParamMap();
-        paramMap.put("name", run.getParent().getFullName());
+      String jobName;
+        if(run instanceof MatrixRun) {
+            jobName =  ((MatrixRun)run).getParentBuild().getProject().getFullName();
+        } else {
+            jobName = run.getParent().getFullName();
+        }
+        paramMap.put("name", jobName);
         paramMap.put("number", run.getId());
         paramMap.put("jenkinuser", Util.getBuildTriggererUserId(run));
         return this;
@@ -363,7 +369,6 @@ public class SprintsWebHook {
         isAuthedicated();
         List<SprintsConnectionConfig> extnList =  new ArrayList<>(Jenkins.getInstance().getExtensionList(SprintsConnectionConfig.class));
         SprintsConnectionConfig conf = extnList.get(0);
-       // headerMap.put("X-ZS-JENKINS-ID", conf.getZsheader());
         config = conf.getClient();
     }
 
@@ -376,7 +381,6 @@ public class SprintsWebHook {
         isAuthedicated();
         List<SprintsConnectionConfig> extnList =  new ArrayList<>(Jenkins.getInstance().getExtensionList(SprintsConnectionConfig.class));
         SprintsConnectionConfig conf = extnList.get(0);
-       // headerMap.put("X-ZS-JENKINS-ID", conf.getZsheader());
         config = conf.getClient();
         this.run = runObj;
     }

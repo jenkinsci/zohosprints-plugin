@@ -111,7 +111,7 @@ public class RunTimeListener extends RunListener<Run<?, ?>> {
             EnvVars envVars = run.getEnvironment(listener);
             Boolean isIssueCreateConfigured = envVars.containsKey("SPRINTS_ISSUE_BUILD_ENVIRONMENT_AVAILABLE");
 
-            if (isIssueCreateConfigured && Result.FAILURE.equals(run.getResult())) {
+            if (isIssueCreateConfigured && Result.FAILURE.equals(run.getResult()) && checkBuildTypeForUpdate(run)) {
                     String name = envVars.get("SPRINTS_ISSUE_NAME");
                     String description = envVars.get("SPRINTS_ISSUE_DESCRIPTION");
                     String assignee = envVars.get("SPRINTS_ISSUE_ASSIGNEE");

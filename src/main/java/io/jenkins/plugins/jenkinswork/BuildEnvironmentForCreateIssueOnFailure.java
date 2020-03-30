@@ -4,6 +4,10 @@ import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.matrix.MatrixBuild;
+import hudson.matrix.MatrixConfiguration;
+import hudson.matrix.MatrixProject;
+import hudson.matrix.MatrixRun;
 import hudson.model.BuildListener;
 import hudson.model.Run;
 import hudson.model.Result;
@@ -162,11 +166,12 @@ public class BuildEnvironmentForCreateIssueOnFailure extends SimpleBuildWrapper 
          */
         @Override
         public boolean isApplicable(AbstractProject<?, ?> item) {
-            if (Util.isAuthendicated()) {
+            if (Util.isAuthendicated() && ! (item instanceof MatrixProject)) {
                 return true;
             } else {
                 return false;
             }
+
         }
 
         /**
