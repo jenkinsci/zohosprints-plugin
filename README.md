@@ -9,7 +9,7 @@ Integrating Jenkins with [Zoho Sprints](https://sprints.zoho.com) saves your tim
 
  
 
-## Configure [Zoho Sprints](https://sprints.zoho.com) team with Jenkins (Build actions in Jenkins
+## Configure [Zoho Sprints](https://sprints.zoho.com) team with Jenkins
 
 - Navigate to your Jenkins account.
 - Select Manage Settings in the left panel.
