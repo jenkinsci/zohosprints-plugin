@@ -38,6 +38,9 @@ public class OAuthUtil {
                 accessToken = respObj.getString("access_token");
                 config.setAccessToken(accessToken);
                 config.setAccessTokenUpdatedTime(System.currentTimeMillis());
+            } else {
+
+                logger.log(Level.INFO,"Error occurred during new access token creation Error - {0}", resp);
             }
         }
         return accessToken;

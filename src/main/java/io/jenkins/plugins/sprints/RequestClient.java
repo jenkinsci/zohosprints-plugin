@@ -277,6 +277,9 @@ public class RequestClient {
             LOGGER.log(Level.INFO, "Status code {0}", respCode);
             HttpEntity reponseEntity = response.getEntity();
             resp = getString(reponseEntity.getContent());
+            if(respCode >= 400) {
+                LOGGER.log(Level.INFO, " Error occurred in Sprints API call Error - {0}", resp);
+            }
             EntityUtils.consume(reponseEntity);
         } catch (IOException e) {
             LOGGER.log(Level.WARNING, "", e);
