@@ -166,7 +166,7 @@ public class BuildEnvironmentForCreateIssueOnFailure extends SimpleBuildWrapper 
          */
         @Override
         public boolean isApplicable(AbstractProject<?, ?> item) {
-            if (Util.isAuthendicated() && ! (item instanceof MatrixProject)) {
+            if ( ! (item instanceof MatrixProject)) {
                 return true;
             } else {
                 return false;
