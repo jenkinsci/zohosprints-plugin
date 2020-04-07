@@ -199,7 +199,10 @@ public class SprintsConfig {
            String[] split = this.url.split("\\.");
            int domainLength = split.length;
            StringBuilder domainUrl = new StringBuilder("https://accounts.");
-            if(!this.url.contains("zoho.com") && !this.url.contains("zoho.in") && !this.url.contains("zoho.eu")) {
+            if(this.url.contains("zoho.com.au")) {
+                domainUrl.append(split[domainLength-3]).append(".");
+            }
+           else  if(!this.url.contains("zoho.com") && !this.url.contains("zoho.in") && !this.url.contains("zoho.eu")) {
                 domainUrl.append(split[domainLength-3]).append(".");
             }
            domainUrl.append(split[domainLength -2]);

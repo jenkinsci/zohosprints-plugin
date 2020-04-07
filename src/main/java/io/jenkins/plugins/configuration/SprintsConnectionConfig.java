@@ -98,6 +98,8 @@ public class SprintsConnectionConfig extends GlobalConfiguration {
         if (connections.isEmpty()) {
             setMigrated(false);
             setZsheader("");
+            setAccountsUrl(null);
+            setDomain(null);
         }
         refreshConnectionMap();
         save();
