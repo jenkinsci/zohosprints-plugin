@@ -41,7 +41,7 @@ public class Util {
     //public static final String MAIL_REGEX = "^([a-zA-Z0-9]([\\w\\-\\.\\+\\']*)@([\\w\\-\\.]*)(\\.[a-zA-Z]{2,20}(\\.[a-zA-Z]{2}){0,2}))$"
 
     public  enum Branchdetails {
-        GITHUB("$GIT_LOCAL_BRANCH"), GITLAB("$gitlabBranch"), BITBUCKET("$BRANCH_NAME"), SPRINTS("$SPRINTS_BRANCH");
+        GITHUB("$GIT_LOCAL_BRANCH"), GITLAB("$gitlabBranch"), BITBUCKET("$BRANCH_NAME"), SPRINTS("$SPRINTS_BRANCH"), GITBRANCH("$GIT_BRANCH");
         private final String variable;
         private static Branchdetails[] branchdetails = values();
         Branchdetails(String branch) {

@@ -113,7 +113,7 @@ public class ItemPriorityUpdateStep extends AbstractStepImpl {
                 Object respObj = parseResponse(sp.updateItempriority(), "UPDATED_ITEM_PRIORITY");
                 String respString = respObj != null ? (String) respObj : null;
                 if (respString != null && !respString.isEmpty()) {
-                    listener.getLogger().println(Util.sprintsLogparser("Updated Status for following Items " + respString));
+                    listener.getLogger().println(Util.sprintsLogparser("Updated Priority for following Items " + respString));
                 } else {
                     listener.error(sprintsLogparser("None of the Item priority updated"));
                 }
