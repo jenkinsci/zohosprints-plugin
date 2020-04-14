@@ -9,7 +9,7 @@
     </parent>
     <groupId>io.jenkins.plugins</groupId>
     <artifactId>zohosprints</artifactId>
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.1.1</version>
     <packaging>hpi</packaging>
     <properties>
         <jenkins.version>2.7.3</jenkins.version>
@@ -29,7 +29,7 @@
         <connection>scm:git:git://github.com/jenkinsci/zohosprints-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/zohosprints-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/zohosprints-plugin</url>
-      <tag>${scmTag}</tag>
+      <tag>1.1.1</tag>
   </scm>
 
     <developers>
