@@ -49,6 +49,6 @@ public class SprintsRootAction implements RootAction {
                                                                 getExtensionList(SprintsConnectionConfig.class));
             SprintsConnectionConfig conf = extnList.get(0);
 
-            return conf.getClient().getUrl() == null ? "" : conf.getClient().getUrl();
+            return conf.getClient() == null ? "https://sprints.zoho.com" : conf.getClient().getUrl();
     }
 }
