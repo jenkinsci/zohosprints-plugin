@@ -181,7 +181,7 @@ public class SprintsConnectionConfig extends GlobalConfiguration {
      */
     public FormValidation doCheckName(@QueryParameter String id, @QueryParameter String value) {
         if (StringUtils.isEmpty(value)) {
-            return FormValidation.error(Messages.config_url_required());
+            return FormValidation.error(Messages.config_name_required());
         } else {
             return FormValidation.ok();
         }
