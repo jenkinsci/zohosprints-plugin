@@ -508,7 +508,7 @@ public class SprintsWorkAction {
                     print.println(parseLogMessage("Comment updated for --> " + ja.toString()));
                    // item.setCommentAddedFor(Util.getStringFromJSONArray(ja));
                 } else {
-                    listener.error(parseLogMessage("Comment not update due to Project/Sprint Permission"));
+                    listener.error(parseLogMessage("Comment not added"));
                 }
                 isSuccess = true;
             }
