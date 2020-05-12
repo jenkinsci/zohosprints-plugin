@@ -61,7 +61,6 @@ public class SprintsDataMigration {
         requestHeaderMap.put("X-ZS-JENKINS-ID", header);
         requestHeaderMap.put("Authorization", "Zoho-oauthtoken " + accessToken);
         LOGGER.info(String.valueOf(itemList.size()));
-        LOGGER.info(header);
         if(itemList.size() == 0){
             LOGGER.log(Level.INFO,"There is no existing Item. So, skipping migration");
             return;
@@ -70,7 +69,6 @@ public class SprintsDataMigration {
         for (Item itemObj : itemList) {
             JSONArray jobArr = new JSONArray();
             String name = itemObj.getFullName();
-            LOGGER.info(name);
             if (itemObj instanceof MatrixConfiguration) {
                 continue;
             } else if (itemObj instanceof Folder) {
