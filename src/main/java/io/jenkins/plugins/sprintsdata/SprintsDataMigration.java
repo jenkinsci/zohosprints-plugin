@@ -57,11 +57,11 @@ public class SprintsDataMigration {
      *
      */
     public void run() {
-        //requestDataMap.put("zapikey", integ);
-        requestDataMap.put("action", "migration");
-        requestHeaderMap.put("X-ZS-JENKINS-ID",header);
-        requestHeaderMap.put("Authorization", "Zoho-oauthtoken "+accessToken);
+       // requestDataMap.put("action", "migration");
+        requestHeaderMap.put("X-ZS-JENKINS-ID", header);
+        requestHeaderMap.put("Authorization", "Zoho-oauthtoken " + accessToken);
         LOGGER.info(String.valueOf(itemList.size()));
+        LOGGER.info(header);
         if(itemList.size() == 0){
             LOGGER.log(Level.INFO,"There is no existing Item. So, skipping migration");
             return;
@@ -70,20 +70,21 @@ public class SprintsDataMigration {
         for (Item itemObj : itemList) {
             JSONArray jobArr = new JSONArray();
             String name = itemObj.getFullName();
+            LOGGER.info(name);
             if (itemObj instanceof MatrixConfiguration) {
                 continue;
             } else if (itemObj instanceof Folder) {
                 arr.put(new JSONObject().put("name", name).put("build", jobArr));
                 if (arr.length() == 10) {
                     requestDataMap.put("jenkinsdata", arr.toString());
-                    makeCall(requestDataMap);
-                    //LOGGER.info(arr.toString());
+                    makeCall(requestDataMap, "/zsapi/jenkins/migration/?action=migration");
                     arr = new JSONArray();
                 }
                 continue;
             }
             Collection<? extends Job> jobCollection = itemObj.getAllJobs();
             int lastFailedNum = -1, lastNumber = -1, lastSuccessNum = -1;
+            boolean buildLoop = false;
             for (Job<?, ?> job : jobCollection) {
 
                 Run<?, ?> lastBuildRun = job.getLastBuild();
@@ -101,6 +102,7 @@ public class SprintsDataMigration {
                 RunList<?> list = job.getBuilds();
                 Iterator<?> listItr = list.iterator();
                 while (listItr.hasNext()) {
+                    buildLoop = true;
                     Run<?, ?> run = (Run<?, ?>) listItr.next();
                     if (run instanceof MatrixRun) {
                         continue;
@@ -122,25 +124,30 @@ public class SprintsDataMigration {
                         buildJson.put("lastsuccess", true);
                     }
                     jobArr.put(buildJson);
+                    if(jobArr.length() == 900 ){
+                        arr.put(new JSONObject().put("name", name).put("build", jobArr));
+                        requestDataMap.put("jenkinsdata", arr.toString());
+                        makeCall(requestDataMap, "/zsapi/jenkins/migration/?action=migration");
+                        jobArr = new JSONArray();
+                        arr = new JSONArray();
+                    }
                 }
             }
-
-            arr.put(new JSONObject().put("name", name).put("build", jobArr));
+            if(jobArr.length() != 0 || !buildLoop) {
+                arr.put(new JSONObject().put("name", name).put("build", jobArr));
+            }
             if (arr.length() == 10) {
                 requestDataMap.put("jenkinsdata", arr.toString());
-               // LOGGER.info(arr.toString());
-                makeCall(requestDataMap);
+                makeCall(requestDataMap, "/zsapi/jenkins/migration/?action=migration");
                 arr = new JSONArray();
             }
         }
         if (arr.length() != 0) {
             requestDataMap.put("jenkinsdata", arr.toString());
-           //LOGGER.info(arr.toString());
-            makeCall(requestDataMap);
+            makeCall(requestDataMap, "/zsapi/jenkins/migration/?action=migration");
         }
-        requestDataMap.put("action","migrationstatus");
         requestDataMap.remove("jenkinsdata");
-        makeCall(requestDataMap);
+        makeCall(requestDataMap, "/zsapi/jenkins/migration/?action=migrationstatus");
     }
 
     /**
@@ -172,8 +179,8 @@ public class SprintsDataMigration {
      *
      * @param map Param Map of the Migration api
      */
-    private void makeCall(Map<String, Object> map) {
-        RequestClient client = new RequestClient(portal.concat("/zsapi/jenkins/migration/"), RequestClient.METHOD_POST, map,requestHeaderMap);
+    private void makeCall(Map<String, Object> map, String url) {
+        RequestClient client = new RequestClient(portal.concat(url), RequestClient.METHOD_POST, map, requestHeaderMap);
         try {
             client.execute();
         } catch (Exception e) {
@@ -196,7 +203,6 @@ public class SprintsDataMigration {
                 EnvVars envVars = run.getEnvironment(TaskListener.NULL);
                 value = envVars.expand(key);
                 if (!key.equals(value)) {
-                   // LOGGER.info(value);
                     break;
                 } else {
                     value = null;
