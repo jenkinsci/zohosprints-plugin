@@ -1,0 +1,9 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+        <f:entry title="Release" field="releasePrefix">
+          <f:textbox />
+        </f:entry>
+        <f:entry title="Item to Map" field="itemPrefix">
+          <f:textbox />
+        </f:entry>
+</j:jelly>

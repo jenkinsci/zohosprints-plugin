@@ -4,6 +4,7 @@ import hudson.matrix.MatrixRun;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.Run;
+import hudson.model.TaskListener;
 import io.jenkins.plugins.configuration.SprintsConfig;
 import io.jenkins.plugins.configuration.SprintsConnectionConfig;
 import io.jenkins.plugins.util.Util;
@@ -23,6 +24,10 @@ import java.util.logging.Logger;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 import static io.jenkins.plugins.util.Util.sprintsLogparser;
 
+/**
+ * @author selvavignesh.m
+ * @version 1.0
+ */
 public class Release {
     private static final Logger LOGGER = Logger.getLogger(Release.class.getName());
     private String projPrefix = null, releasePrefix = null, itemtoAssociatePrefix = null, owner = null, stage = null, releaseName = null, description = null;
@@ -32,52 +37,207 @@ public class Release {
     private SprintsConfig config;
     private Run<?, ?> run;
     private BuildListener listener;
-    public Release setProjPrefix(String projPrefix) {
+
+    /**
+     *
+     * @param projPrefix
+     * @return Instance of Release Class
+     */
+    public Release setProjPrefix(final String projPrefix) {
         this.projPrefix = Util.expandContent(build, listener, projPrefix);
         return this;
     }
-    public Release setReleaseName(String releaseName) {
+
+    /**
+     *
+     * @param projPrefix
+     * @return Instance of Release Class
+     */
+    public Release setProjPrefixWOExpand(final String projPrefix) {
+        this.projPrefix = projPrefix;
+        return this;
+    }
+
+    /**
+     *
+     * @param releaseName
+     * @return Instance of Release Class
+     */
+    public Release setReleaseName(final String releaseName) {
         this.releaseName =  Util.expandContent(build, listener, releaseName);
         return this;
     }
 
-    public Release setDescription(String description) {
+    /**
+     *
+     * @param releaseName
+     * @return Instance of Release Class
+     */
+    public Release setReleaseNameWOExpand(final String releaseName) {
+        this.releaseName =  releaseName;
+        return this;
+    }
+
+    /**
+     *
+     * @param description
+     * @return Instance of Release Class
+     */
+    public Release setDescription(final String description) {
         this.description =  Util.expandContent(build, listener, description);
         return this;
     }
-    public Release setReleasePrefix(String releasePrefix) {
+
+    /**
+     *
+     * @param description
+     * @return Instance of Release Class
+     */
+    public Release setDescriptionWOExpand(final String description) {
+        this.description =  description;
+        return this;
+    }
+
+    /**
+     *
+     * @param releasePrefix
+     * @return Instance of Release Class
+     */
+    public Release setReleasePrefix(final String releasePrefix) {
+        this.releasePrefix = Util.expandContent(build, listener, releasePrefix);
+        return this;
+    }
+
+    /**
+     *
+     * @param releasePrefix
+     * @return Instance of Release Class
+     */
+    public Release setReleasePrefixWOExpand(final String releasePrefix) {
         this.releasePrefix = releasePrefix;
         return this;
     }
 
-    public Release setItemtoAssociatePrefix(String itemtoAssociatePrefix) {
+    /**
+     *
+     * @param itemtoAssociatePrefix
+     * @return Instance of Release Class
+     */
+    public Release setItemtoAssociatePrefix(final String itemtoAssociatePrefix) {
         if(!isEmpty(itemtoAssociatePrefix)) {
             this.itemtoAssociatePrefix =  Util.expandContent(build, listener, itemtoAssociatePrefix);
         }
         return this;
     }
 
-    public Release setOwner(String owner) {
+    /**
+     *
+     * @param itemtoAssociatePrefix
+     * @return Instance of Release Class
+     */
+    public Release setItemtoAssociatePrefixWOExpand(final String itemtoAssociatePrefix) {
+        if(!isEmpty(itemtoAssociatePrefix)) {
+            this.itemtoAssociatePrefix =  itemtoAssociatePrefix;
+        }
+        return this;
+    }
+
+    /**
+     *
+     * @param owner
+     * @return Instance of Release Class
+     */
+    public Release setOwner(final String owner) {
         this.owner =  Util.expandContent(build, listener, owner);
         return this;
     }
 
-    public Release setStage(String stage) {
+    /**
+     *
+     * @param owner
+     * @return Instance of Release Class
+     */
+    public Release setOwnerWOExpand(final String owner) {
+        this.owner =  owner;
+        return this;
+    }
+
+    /**
+     *
+     * @param stage
+     * @return Instance of Release Class
+     */
+    public Release setStage(final String stage) {
         this.stage =  Util.expandContent(build, listener, stage);
         return this;
     }
 
-    public Release setReleaseTime(String releaseTime) {
+    /**
+     *
+     * @param stage
+     * @return Instance of Release Class
+     */
+    public Release setStageWOExpand(final String stage) {
+        this.stage =  stage;
+        return this;
+    }
+
+    /**
+     *
+     * @param releaseTime
+     * @return Instance of Release Class
+     */
+    public Release setReleaseTime(final String releaseTime) {
         this.releaseTime =  Integer.parseInt(Util.expandContent(build, listener, releaseTime));
         return this;
     }
 
+    /**
+     *
+     * @param releaseTime
+     * @return Instance of Release Class
+     */
+    public Release setReleaseTimeWOExpand(final String releaseTime) {
+        this.releaseTime =  Integer.parseInt(releaseTime);
+        return this;
+    }
+
+    /**
+     *
+     * @param abstractBuild
+     * @param buildListener
+     */
     private Release(AbstractBuild<?,?> abstractBuild, BuildListener buildListener) {
         this.build = abstractBuild;
         this.listener = buildListener;
         this.run = abstractBuild;
     }
+
+    /**
+     *
+     * @param run
+     * @param buildListener
+     */
+    private Release(Run<?,?> run, TaskListener buildListener) {
+        this.run = run;
+        this.listener = (BuildListener) buildListener;
+    }
+
     private Release(){}
+
+    /**
+     *
+     * @param abstractBuild
+     * @param listener
+     * @param projPrefix
+     * @param itemtoAssociatePrefix
+     * @param releasename
+     * @param stage
+     * @param descripttion
+     * @param owner
+     * @param period
+     * @return  Instance of Release Class
+     */
     public static Release getInstanceForCreate(final AbstractBuild<?,?> abstractBuild, final BuildListener listener, final String projPrefix,
                                                final String itemtoAssociatePrefix, final String releasename, String stage,
                                                final String descripttion, final String owner, final String period) {
@@ -93,6 +253,14 @@ public class Release {
 
     }
 
+    /**
+     *
+     * @param abstractBuild
+     * @param listener
+     * @param releasePrefix
+     * @param itemtoAssociatePrefix
+     * @return Instance of Release Class
+     */
     public static Release getInstanceForAssociateItems(final AbstractBuild<?,?> abstractBuild, final BuildListener listener, final String releasePrefix,
                                                        final String itemtoAssociatePrefix) {
         return new Release(abstractBuild, listener)
@@ -101,14 +269,86 @@ public class Release {
                 .getCommonParam();
     }
 
+    /**
+     *
+     * @param abstractBuild
+     * @param listener
+     * @param releasePrefix
+     * @param stageToUpdate
+     * @return Instance of Release Class
+     */
     public static Release getInstanceForUpdateStage(final AbstractBuild<?,?> abstractBuild, final BuildListener listener, final String releasePrefix,
-                                                       final String stageToUpdate) {
+                                                    final String stageToUpdate) {
         return new Release(abstractBuild, listener)
                 .setReleasePrefix(releasePrefix)
                 .setStage(stageToUpdate)
                 .getCommonParam();
     }
 
+    /**
+     * Use this method only for pipeline job
+     * @param run
+     * @param listener
+     * @param releasePrefix
+     * @param itemtoAssociatePrefix
+     * @return Instance of Release Class
+     */
+    public static Release getInstanceForAssociateItemsForPipeline(final Run<?,?> run, final TaskListener listener, final String releasePrefix,
+                                                                  final String itemtoAssociatePrefix) {
+        return new Release(run, listener)
+                .setReleasePrefixWOExpand(releasePrefix)
+                .setItemtoAssociatePrefixWOExpand(itemtoAssociatePrefix)
+                .getCommonParam();
+    }
+
+    /**
+     * Use this method only for pipeline job
+     * @param run
+     * @param listener
+     * @param releasePrefix
+     * @param stageToUpdate
+     * @return Instance of Release Class
+     */
+    public static Release getInstanceForUpdateStageForPipeline(final Run<?,?> run, final TaskListener listener, final String releasePrefix,
+                                                               final String stageToUpdate) {
+        return new Release(run, listener)
+                .setReleasePrefixWOExpand(releasePrefix)
+                .setStageWOExpand(stageToUpdate)
+                .getCommonParam();
+    }
+
+    /**
+     * Use this method only for pipeline job
+     * @param run
+     * @param listener
+     * @param projPrefix
+     * @param itemtoAssociatePrefix
+     * @param releasename
+     * @param stage
+     * @param descripttion
+     * @param owner
+     * @param period
+     * @return Instance of Release Class
+     */
+    public static Release getInstanceForCreateForPipeline(final Run<?,?> run, final TaskListener listener, final String projPrefix,
+                                                          final String itemtoAssociatePrefix, final String releasename, String stage,
+                                                          final String descripttion, final String owner, final String period) {
+        return new Release(run, listener)
+                .setProjPrefixWOExpand(projPrefix)
+                .setItemtoAssociatePrefixWOExpand(itemtoAssociatePrefix)
+                .setReleaseNameWOExpand(releasename)
+                .setDescriptionWOExpand(descripttion)
+                .setStageWOExpand(stage)
+                .setOwnerWOExpand(owner)
+                .setReleaseTimeWOExpand(period)
+                .getCommonParam();
+
+    }
+
+    /**
+     *
+     * @return Boolean
+     */
     private boolean isProperProjectPrefix() {
         if(!isEmpty(projPrefix) && projPrefix.matches(Util.PROJECT_REGEX)) {
             return true;
@@ -116,6 +356,11 @@ public class Release {
         listener.getLogger().println(parseLogMessage("Given Project prefix is wrong", true));
         return false;
     }
+
+    /**
+     *
+     * @return Boolean
+     */
     private boolean isProperReleasePrefix() {
         if(!isEmpty(releasePrefix) && releasePrefix.matches(Util.RELEASE_REGEX)) {
             return true;
@@ -124,6 +369,10 @@ public class Release {
         return false;
     }
 
+    /**
+     *
+     * @return Boolean
+     */
     private boolean isProperItemPrefix() {
         if(isEmpty(itemtoAssociatePrefix)){
             return true;
@@ -134,6 +383,11 @@ public class Release {
         listener.getLogger().println(parseLogMessage("Given Item prefix is wrong", true));
         return false;
     }
+
+    /**
+     *
+     * @return Boolean
+     */
     private boolean isOwnerNULLorEmpty() {
         if(!isEmpty(owner)){
             return true;
@@ -141,10 +395,21 @@ public class Release {
         listener.getLogger().println(parseLogMessage("Release Owner should not be empty", true));
         return false;
     }
+
+    /**
+     *
+     * @param message
+     * @param isError
+     * @return String
+     */
     private String parseLogMessage(final String message, final boolean isError) {
         return sprintsLogparser(message, isError);
     }
 
+    /**
+     *
+     * @return
+     */
     private Release getCommonParam() {
         String jobName;
         if(run instanceof MatrixRun) {
@@ -157,12 +422,19 @@ public class Release {
         paramMap.put("jenkinuser", Util.getBuildTriggererUserId(run));
         return this;
     }
+
+    /**
+     *
+     * @param method
+     * @return
+     */
     private RequestClient getClient(final String method) {
         doGetConfig();
         RequestClient client = new RequestClient(config.getReleaseAction(), method, paramMap);
         client.setOAuthHeader();
         return client;
     }
+
     private void doGetConfig() {
         if(config != null) {
             return;
@@ -171,6 +443,11 @@ public class Release {
         SprintsConnectionConfig conf = extnList.get(0);
         config = conf.getClient();
     }
+
+    /**
+     *
+     * @return boolean
+     */
     public boolean create() {
         try {
             PrintStream log = listener.getLogger();
@@ -211,6 +488,10 @@ public class Release {
         return false;
     }
 
+    /**
+     *
+     * @return boolean
+     */
     public boolean associateItem() {
         try {
             PrintStream log = listener.getLogger();
@@ -239,6 +520,10 @@ public class Release {
         return false;
     }
 
+    /**
+     *
+     * @return boolean
+     */
     public boolean updateReleaseStage() {
         try {
             PrintStream log = listener.getLogger();

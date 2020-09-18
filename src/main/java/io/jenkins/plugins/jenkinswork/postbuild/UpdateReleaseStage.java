@@ -1,12 +1,11 @@
-package io.jenkins.plugins.jenkinswork.buildstepaction;
+package io.jenkins.plugins.jenkinswork.postbuild;
 
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
-import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.Builder;
+import hudson.tasks.*;
 import hudson.util.FormValidation;
 import io.jenkins.plugins.Messages;
 import io.jenkins.plugins.sprints.Release;
@@ -19,34 +18,46 @@ import org.kohsuke.stapler.StaplerRequest;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 
-public class AssociateItemToRelease extends Builder {
-    private String releasePrefix = null, itemPrefix = null;
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
+public class UpdateReleaseStage extends Recorder {
+    private String releasePrefix = null, stage = null;
+
     public String getReleasePrefix() {
         return releasePrefix;
     }
-    public String getItemPrefix() {
-        return itemPrefix;
+
+    public String getStage() {
+        return stage;
     }
 
     @DataBoundConstructor
-    public AssociateItemToRelease(String releasePrefix, String itemPrefix) {
+    public UpdateReleaseStage(String releasePrefix, String stage) {
         this.releasePrefix = releasePrefix;
-        this.itemPrefix = itemPrefix;
+        this.stage = stage;
+    }
+    /**
+     *
+     * @return Monitoring Service for BuildStep
+     */
+    @Override
+    public BuildStepMonitor getRequiredMonitorService() {
+        return BuildStepMonitor.NONE;
     }
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
-        return Release.getInstanceForAssociateItems(build, listener, releasePrefix, itemPrefix).associateItem();
+        return Release.getInstanceForUpdateStage(build, listener, releasePrefix, stage).updateReleaseStage();
     }
+
     public DescriptorImpl getDescriptor() {
         return (DescriptorImpl) super.getDescriptor();
     }
     @Extension
-    public static class DescriptorImpl extends BuildStepDescriptor<Builder> {
+    public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
         @Override
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
             return true;
         }
-
         public FormValidation doCheckReleasePrefix(@QueryParameter final String releasePrefix) {
             if (releasePrefix.matches(Util.RELEASE_REGEX)) {
                 return FormValidation.ok();
@@ -54,12 +65,13 @@ public class AssociateItemToRelease extends Builder {
             return FormValidation.error(Messages.prefix_message());
         }
 
-        public FormValidation doCheckItemPrefix(@QueryParameter final String itemPrefix) {
-            if (itemPrefix.matches(Util.ITEM_REGEX)) {
+        public FormValidation doCheckStage(@QueryParameter final String stage) {
+            if (!isEmpty(stage)) {
                 return FormValidation.ok();
             }
             return FormValidation.error(Messages.prefix_message());
         }
+
 
         @Override
         public boolean configure(StaplerRequest req, JSONObject json) throws FormException {
@@ -71,7 +83,8 @@ public class AssociateItemToRelease extends Builder {
         @Nonnull
         @Override
         public String getDisplayName() {
-            return Messages.release_associate_item();
+            return Messages.release_update_stage();
         }
     }
+
 }

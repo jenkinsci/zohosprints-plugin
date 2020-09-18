@@ -1,18 +1,15 @@
-package io.jenkins.plugins.jenkinswork.buildstepaction;
+package io.jenkins.plugins.jenkinswork.postbuild;
 
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
-import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.Builder;
+import hudson.tasks.*;
 import hudson.util.FormValidation;
 import io.jenkins.plugins.Messages;
 import io.jenkins.plugins.sprints.Release;
 import io.jenkins.plugins.util.Util;
-import static org.apache.commons.lang.StringUtils.isEmpty;
-
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
@@ -21,7 +18,9 @@ import org.kohsuke.stapler.StaplerRequest;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 
-public class CreateRelease extends Builder {
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
+public class CreateRelease extends Recorder {
     private String prefix = null, itemPrefix = null, releaseName = null, description = null, stage = null, owner = null, period = null;
     public String getPrefix() {
         return prefix;
@@ -61,7 +60,14 @@ public class CreateRelease extends Builder {
         this.owner = owner;
         this.period = period;
     }
-
+    /**
+     *
+     * @return Monitoring Service for BuildStep
+     */
+    @Override
+    public BuildStepMonitor getRequiredMonitorService() {
+        return BuildStepMonitor.NONE;
+    }
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
         return Release.getInstanceForCreate(build, listener, prefix, itemPrefix, releaseName, stage, description, owner, period).create();
@@ -71,7 +77,7 @@ public class CreateRelease extends Builder {
     }
 
     @Extension
-    public static class DescriptorImpl extends BuildStepDescriptor<Builder> {
+    public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
         @Override
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
             return true;

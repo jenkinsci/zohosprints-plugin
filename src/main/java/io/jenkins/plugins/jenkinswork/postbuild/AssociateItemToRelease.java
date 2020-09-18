@@ -1,12 +1,11 @@
-package io.jenkins.plugins.jenkinswork.buildstepaction;
+package io.jenkins.plugins.jenkinswork.postbuild;
 
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
-import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.Builder;
+import hudson.tasks.*;
 import hudson.util.FormValidation;
 import io.jenkins.plugins.Messages;
 import io.jenkins.plugins.sprints.Release;
@@ -18,8 +17,11 @@ import org.kohsuke.stapler.StaplerRequest;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-
-public class AssociateItemToRelease extends Builder {
+/**
+ *@author selvavignesh.m
+ * @version 1.0
+ */
+public class AssociateItemToRelease extends Recorder {
     private String releasePrefix = null, itemPrefix = null;
     public String getReleasePrefix() {
         return releasePrefix;
@@ -28,10 +30,23 @@ public class AssociateItemToRelease extends Builder {
         return itemPrefix;
     }
 
+    /**
+     * 
+     * @param releasePrefix
+     * @param itemPrefix
+     */
     @DataBoundConstructor
     public AssociateItemToRelease(String releasePrefix, String itemPrefix) {
         this.releasePrefix = releasePrefix;
         this.itemPrefix = itemPrefix;
+    }
+    /**
+     *
+     * @return Monitoring Service for BuildStep
+     */
+    @Override
+    public BuildStepMonitor getRequiredMonitorService() {
+        return BuildStepMonitor.NONE;
     }
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
@@ -41,7 +56,7 @@ public class AssociateItemToRelease extends Builder {
         return (DescriptorImpl) super.getDescriptor();
     }
     @Extension
-    public static class DescriptorImpl extends BuildStepDescriptor<Builder> {
+    public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
         @Override
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
             return true;

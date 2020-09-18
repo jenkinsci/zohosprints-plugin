@@ -77,7 +77,7 @@ public class UpdateReleaseStage extends Builder {
         @Nonnull
         @Override
         public String getDisplayName() {
-            return "[Zoho Sprints] Update Release stage";
+            return Messages.release_update_stage();
         }
     }
 
