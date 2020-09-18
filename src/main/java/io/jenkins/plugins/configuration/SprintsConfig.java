@@ -28,6 +28,7 @@ public class SprintsConfig {
     private static final String UPDATE_ACTION = "/zsapi/jenkins/update/";
     private static final String ADD_COMMENT = "/zsapi/jenkins/comment/";
     private static final String STATUS_ACTION = "/zsapi/jenkins/status/";
+    private static final String RELEASE_ACTION = "/zsapi/jenkins/release/";
 
     /**
      *
@@ -152,6 +153,10 @@ public class SprintsConfig {
             return url + ADD_COMMENT+ "?action="+operationValue;
         }
         return url + ADD_COMMENT;
+    }
+
+    public String getReleaseAction() {
+        return url + RELEASE_ACTION;
     }
 
     /**

@@ -147,9 +147,9 @@ public class ItemCommentStep extends AbstractStepImpl {
                 JSONArray ja = respObj.optJSONArray("COMMENT_ADDED_ITEM");
                 if (respObj.has("status") && respObj.optString("status").equalsIgnoreCase("success")
                         && ja != null && ja.length() > 0) {
-                    listener.getLogger().println(sprintsLogparser("Comment updated for --> " + ja.toString()));
+                    listener.getLogger().println(sprintsLogparser("Comment updated for --> " + ja.toString(), true));
                 } else {
-                    listener.error(sprintsLogparser("Comment not update due to Project/Sprint Permission"));
+                    listener.error(sprintsLogparser("Comment not update due to Project/Sprint Permission", true));
                 }
             }
             return null;

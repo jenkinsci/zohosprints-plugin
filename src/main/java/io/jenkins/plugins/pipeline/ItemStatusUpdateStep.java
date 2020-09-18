@@ -122,14 +122,14 @@ public class ItemStatusUpdateStep extends AbstractStepImpl {
                         : new JSONArray();
                 if (ja.length() > 0) {
                     printStream.println(sprintsLogparser(
-                                    "Updated Status for following Items " + ja.toString()));
+                                    "Updated Status for following Items " + ja.toString(), false ));
                 } else {
                     listener.error(sprintsLogparser(
-                            "None of the Items Status are updated"));
+                            "None of the Items Status are updated", false));
                 }
             } catch (Exception e) {
                 listener.error(sprintsLogparser(
-                        "Error occured. None of the Items Status are updated"));
+                        "Error occured. None of the Items Status are updated", false));
             }
 
         return null;

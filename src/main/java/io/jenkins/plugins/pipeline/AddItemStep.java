@@ -171,12 +171,12 @@ public class AddItemStep extends AbstractStepImpl {
                 String resp = createItem.createItem();
                 Object respObject = Util.parseResponse(resp, "status");
                 if (respObject != null && respObject.toString().equals("success")) {
-                    listener.getLogger().println(Util.sprintsLogparser("Item created"));
+                    listener.getLogger().println(Util.sprintsLogparser("Item created", false));
                 } else {
-                    listener.getLogger().println(sprintsLogparser("Item not created"));
+                    listener.getLogger().println(sprintsLogparser("Item not created", true));
                 }
             } catch (Exception e) {
-                listener.error(sprintsLogparser("Error Occured. Item not created"));
+                listener.error(sprintsLogparser("Error Occured. Item not created", true));
             }
             return null;
         }

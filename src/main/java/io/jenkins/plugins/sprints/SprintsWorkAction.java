@@ -407,6 +407,7 @@ public class SprintsWorkAction {
                 .setMailid();
     }
 
+
     /**
      *
      * @param frombuildActionType Type of build {builder/post build}
@@ -432,17 +433,17 @@ public class SprintsWorkAction {
                                                     itemType, itemAssignee, isItemAddAttachment).createItem();
             Object respObject = Util.parseResponse(response, "status");
             if (respObject != null && respObject.toString().equals("success")) {
-                listener.getLogger().println(parseLogMessage("Item created"));
+                listener.getLogger().println(parseLogMessage("Item created", false));
                 //item.setCreationStatus("Item created");
             } else {
-                listener.getLogger().println(parseLogMessage("Item not created"));
+                listener.getLogger().println(parseLogMessage("Item not created", true));
                 //item.setCreationStatus("Item not created");
             }
            /* setListOfObject(item);
             configBuildAction();*/
             return true;
         } catch (Exception e) {
-            listener.getLogger().println(parseLogMessage("error occured and issue not updated"));
+            listener.getLogger().println(parseLogMessage("error occured and issue not updated", true));
             LOGGER.log(Level.WARNING, "", e);
         }
         return false;
@@ -467,10 +468,10 @@ public class SprintsWorkAction {
             JSONArray ja = value != null ? new JSONArray(value.toString()) : new JSONArray();
             if (ja.length() > 0) {
                 isSuccess = true;
-                listener.getLogger().println(parseLogMessage("Updated Status for following Items " + ja.toString()));
+                listener.getLogger().println(parseLogMessage("Updated Status for following Items " + ja.toString(), false));
                 //item.setStatusUpdateItem(Util.getStringFromJSONArray(ja));
             } else {
-                listener.error(parseLogMessage("None of the Items Status are updated"));
+                listener.error(parseLogMessage("None of the Items Status are updated", false));
             }
 
         } catch (Exception e) {
@@ -490,12 +491,7 @@ public class SprintsWorkAction {
         String resp = null;
         Object obj = null;
         boolean isSuccess = false;
-        //SprintActionInterface item = Comment.getInstance();
         try {
-        /*item.setComment(note);
-        item.setItemGivenForCommentAdd(prefix);
-        item.setLogFileAdded(isCommentAttachment);*/
-
             SprintsWebHook sprint = SprintsWebHook.getInstanceForAddComment(build, listener, prefix, note, isCommentAttachment());
             if (prefix.matches(Util.SPRINTSANDITEMREGEX)) {
                 obj = sprint.addComment();
@@ -505,10 +501,9 @@ public class SprintsWorkAction {
                 JSONArray ja = respObj.optJSONArray("COMMENT_ADDED_ITEM");
                 if (respObj.has("status") && respObj.optString("status").equalsIgnoreCase("success")
                              && ja != null && ja.length() > 0) {
-                    print.println(parseLogMessage("Comment updated for --> " + ja.toString()));
-                   // item.setCommentAddedFor(Util.getStringFromJSONArray(ja));
+                    print.println(parseLogMessage("Comment updated for --> " + ja.toString(), false));
                 } else {
-                    listener.error(parseLogMessage("Comment not added"));
+                    listener.error(parseLogMessage("Comment not added", true));
                 }
                 isSuccess = true;
             }
@@ -518,8 +513,6 @@ public class SprintsWorkAction {
             listener.error("Exception occured " + e.getMessage());
             LOGGER.log(Level.WARNING, "", e);
         }
-       /* setListOfObject(item);
-        configBuildAction();*/
         return isSuccess;
     }
 
@@ -540,10 +533,10 @@ public class SprintsWorkAction {
             String respString = respObj != null ? (String) respObj : null;
             if (respString != null && !respString.isEmpty()) {
                 isSuccess = true;
-                listener.getLogger().println(parseLogMessage("Updated Priority for following Items " + respString));
+                listener.getLogger().println(parseLogMessage("Updated Priority for following Items " + respString, false));
                 //item.setPriorityUpdateItem(respString.substring(1, respString.length() - 1));
             } else {
-                listener.error(parseLogMessage("None of the Item priority updated"));
+                listener.error(parseLogMessage("None of the Item priority updated", true));
             }
 
 
@@ -568,10 +561,10 @@ public class SprintsWorkAction {
             isSuccess = SprintsWebHook.getInstatnceForUpdateStatus(build, listener, prefix, status, true).addFeedStatus();
             if (isSuccess) {
                // item.setCreationStatus("Feed Status added");
-                listener.getLogger().println(parseLogMessage("Feed Status added"));
+                listener.getLogger().println(parseLogMessage("Feed Status added", false));
             } else {
                 //item.setCreationStatus("Feed Status not added");
-                listener.error(parseLogMessage("Feed Status not added"));
+                listener.error(parseLogMessage("Feed Status not added", true));
             }
 
         } catch (Exception e) {
@@ -606,7 +599,7 @@ public class SprintsWorkAction {
      * @param message message to be parsed for Sprints plugin
      * @return  Log message prepend with ZohoSprints
      */
-    private String parseLogMessage(final String message) {
-        return Util.sprintsLogparser(message);
+    private String parseLogMessage(final String message, final boolean isError) {
+        return Util.sprintsLogparser(message, isError);
     }
 }

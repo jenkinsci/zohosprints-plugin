@@ -647,7 +647,7 @@ public class SprintsWebHook {
      */
     public Object addComment() throws Exception {
         if (prefixList.isEmpty()) {
-            taskListener.error(sprintsLogparser("Empty prefix"));
+            taskListener.error(sprintsLogparser("Empty prefix", true));
             return null;
         }
        // paramMap.put("action", ITEM_COMMENT_ACTION);

@@ -34,8 +34,9 @@ public class Util {
     private static final Logger LOGGER = Logger.getLogger(Util.class.getName());
     private static final String BUILD_LOG_COMMENT_VAR = "$SPRINTS_BUILD_LOG";
     public static final String SPRINTSANDITEMREGEX = "^P[0-9]+#(I|S)[0-9]+(:?,P[0-9]+#(I|S)[0-9]+)*$";
-    public static final String PROJECT_REGEX = "^(P[0-9]+)$";
-    public static final String ADD_ITEM_REGEX = "^P[0-9]+(#S[0-9]+)*$";
+    public static final String PROJECT_REGEX = "^P[0-9]+$";
+    public static final String RELEASE_REGEX = "^P[0-9]+#R[0-9]+$";
+    public static final String ADD_ITEM_REGEX = "^P[0-9]+#S[0-9]+(#R[0-9]+)?$";
     public static final String ITEM_REGEX = "(^P[0-9]+#I[0-9]+(?:,P[0-9]+#I[0-9]+)*)$";
     private static final String PLUGIN_RESOUCE_PATH = "/plugin/zohosprints/";
     //public static final String MAIL_REGEX = "^([a-zA-Z0-9]([\\w\\-\\.\\+\\']*)@([\\w\\-\\.]*)(\\.[a-zA-Z]{2,20}(\\.[a-zA-Z]{2}){0,2}))$"
@@ -185,8 +186,11 @@ public class Util {
      * @param message Meesage to parse for Sprints Plugin
      * @return Prepend ZohoSprints in logger
      */
-    public static String sprintsLogparser(final String message) {
+    public static String sprintsLogparser(final String message, final boolean isError) {
         StringBuffer buffer = new StringBuffer("[Zoho Sprints] ");
+        if(isError) {
+            buffer.append("[ Error ] ");
+        }
         return buffer.append(message).toString();
     }
     /**
