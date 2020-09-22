@@ -2,6 +2,7 @@ package io.jenkins.plugins.jenkinswork.buildstepaction;
 
 import hudson.Extension;
 import hudson.Launcher;
+import hudson.matrix.MatrixProject;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
@@ -110,6 +111,10 @@ public class AddComment extends Builder {
          */
         @Override
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
+
+            if(MatrixProject.class.equals(jobType)) {
+                return false;
+            }
             return true;
         }
 

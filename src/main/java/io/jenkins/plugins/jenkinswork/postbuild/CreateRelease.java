@@ -2,6 +2,10 @@ package io.jenkins.plugins.jenkinswork.postbuild;
 
 import hudson.Extension;
 import hudson.Launcher;
+import hudson.matrix.MatrixAggregatable;
+import hudson.matrix.MatrixAggregator;
+import hudson.matrix.MatrixBuild;
+import hudson.matrix.MatrixRun;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
@@ -17,10 +21,13 @@ import org.kohsuke.stapler.StaplerRequest;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
-public class CreateRelease extends Recorder {
+public class CreateRelease extends Recorder implements MatrixAggregatable {
+    private static final Logger LOGGER = Logger.getLogger(CreateRelease.class.getName());
     private String prefix = null, itemPrefix = null, releaseName = null, description = null, stage = null, owner = null, period = null;
     public String getPrefix() {
         return prefix;
@@ -60,6 +67,23 @@ public class CreateRelease extends Recorder {
         this.owner = owner;
         this.period = period;
     }
+    //This method will run this action only in Matrix parent job
+    public MatrixAggregator createAggregator(MatrixBuild matrixbuild,
+                                             Launcher launcher, BuildListener buildlistener) {
+        return new MatrixAggregator(matrixbuild, launcher, buildlistener) {
+            @Override
+            public boolean endBuild() throws InterruptedException, IOException {
+                LOGGER.log(Level.FINE, "end build of {0}", this.build.getDisplayName());
+                return CreateRelease.this._perform(this.build, this.launcher, this.listener);
+            }
+
+            @Override
+            public boolean startBuild() throws InterruptedException, IOException {
+                LOGGER.log(Level.FINE, "end build of {0}", this.build.getDisplayName());
+                return true;
+            }
+        };
+    }
     /**
      *
      * @return Monitoring Service for BuildStep
@@ -70,6 +94,12 @@ public class CreateRelease extends Recorder {
     }
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+        if(build instanceof MatrixRun) {
+            return true;
+        }
+        return _perform(build,launcher,listener);
+    }
+    private boolean _perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
         return Release.getInstanceForCreate(build, listener, prefix, itemPrefix, releaseName, stage, description, owner, period).create();
     }
     public DescriptorImpl getDescriptor() {

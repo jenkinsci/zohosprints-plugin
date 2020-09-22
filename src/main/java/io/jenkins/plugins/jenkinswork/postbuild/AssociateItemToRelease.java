@@ -2,10 +2,17 @@ package io.jenkins.plugins.jenkinswork.postbuild;
 
 import hudson.Extension;
 import hudson.Launcher;
+import hudson.matrix.MatrixAggregatable;
+import hudson.matrix.MatrixAggregator;
+import hudson.matrix.MatrixBuild;
+import hudson.matrix.MatrixRun;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
-import hudson.tasks.*;
+import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.BuildStepMonitor;
+import hudson.tasks.Publisher;
+import hudson.tasks.Recorder;
 import hudson.util.FormValidation;
 import io.jenkins.plugins.Messages;
 import io.jenkins.plugins.sprints.Release;
@@ -17,11 +24,15 @@ import org.kohsuke.stapler.StaplerRequest;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *@author selvavignesh.m
  * @version 1.0
  */
-public class AssociateItemToRelease extends Recorder {
+public class AssociateItemToRelease extends Recorder implements MatrixAggregatable {
+    private static final Logger LOGGER = Logger.getLogger(AssociateItemToRelease.class.getName());
     private String releasePrefix = null, itemPrefix = null;
     public String getReleasePrefix() {
         return releasePrefix;
@@ -31,7 +42,7 @@ public class AssociateItemToRelease extends Recorder {
     }
 
     /**
-     * 
+     *
      * @param releasePrefix
      * @param itemPrefix
      */
@@ -39,6 +50,23 @@ public class AssociateItemToRelease extends Recorder {
     public AssociateItemToRelease(String releasePrefix, String itemPrefix) {
         this.releasePrefix = releasePrefix;
         this.itemPrefix = itemPrefix;
+    }
+    //This method will run this action only in Matrix parent job
+    public MatrixAggregator createAggregator(MatrixBuild matrixbuild,
+                                             Launcher launcher, BuildListener buildlistener) {
+        return new MatrixAggregator(matrixbuild, launcher, buildlistener) {
+            @Override
+            public boolean endBuild() throws InterruptedException, IOException {
+                LOGGER.log(Level.FINE, "end build of {0}", this.build.getDisplayName());
+                return AssociateItemToRelease.this._perform(this.build, this.launcher, this.listener);
+            }
+
+            @Override
+            public boolean startBuild() throws InterruptedException, IOException {
+                LOGGER.log(Level.FINE, "end build of {0}", this.build.getDisplayName());
+                return true;
+            }
+        };
     }
     /**
      *
@@ -50,6 +78,12 @@ public class AssociateItemToRelease extends Recorder {
     }
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+        if(build instanceof MatrixRun){
+            return true;
+        }
+        return _perform(build,launcher,listener);
+    }
+    private boolean _perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
         return Release.getInstanceForAssociateItems(build, listener, releasePrefix, itemPrefix).associateItem();
     }
     public DescriptorImpl getDescriptor() {

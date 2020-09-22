@@ -2,6 +2,7 @@ package io.jenkins.plugins.jenkinswork.postbuild;
 
 import hudson.Extension;
 import hudson.Launcher;
+import hudson.matrix.*;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
@@ -21,12 +22,13 @@ import org.kohsuke.stapler.StaplerRequest;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
  *@author selvavignesh.m
  * @version 1.0
  */
-public class UpdatePriority extends Recorder {
+public class UpdatePriority extends Recorder implements MatrixAggregatable {
     private static final Logger LOGGER = Logger.getLogger(UpdatePriority.class.getName());
     private String prefix;
     private String priority;
@@ -66,6 +68,25 @@ public class UpdatePriority extends Recorder {
         return BuildStepMonitor.NONE;
     }
 
+    //This method will run this action only in Matrix parent job
+    public MatrixAggregator createAggregator(MatrixBuild matrixbuild,
+                                             Launcher launcher, BuildListener buildlistener) {
+        return new MatrixAggregator(matrixbuild, launcher, buildlistener) {
+            @Override
+            public boolean endBuild() throws InterruptedException, IOException {
+                LOGGER.log(Level.FINE, "end build of {0}", this.build.getDisplayName());
+                return UpdatePriority.this._perform(this.build, this.launcher, this.listener);
+            }
+
+            @Override
+            public boolean startBuild() throws InterruptedException, IOException {
+                LOGGER.log(Level.FINE, "end build of {0}", this.build.getDisplayName());
+                return true;
+            }
+        };
+    }
+
+
     /**
      *
      * @param build Build Object of Current build
@@ -77,7 +98,14 @@ public class UpdatePriority extends Recorder {
      */
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
-            return SprintsWorkAction.getInstanceForUpdatePriority(build, listener, SprintsWorkAction.POST_BUILD_TYPE, prefix, priority).updatePriority();
+        if(build instanceof MatrixRun) {
+            return true;
+        }
+        return _perform(build,launcher,listener);
+    }
+
+    public boolean _perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+        return SprintsWorkAction.getInstanceForUpdatePriority(build, listener, SprintsWorkAction.POST_BUILD_TYPE, prefix, priority).updatePriority();
     }
 
     /**

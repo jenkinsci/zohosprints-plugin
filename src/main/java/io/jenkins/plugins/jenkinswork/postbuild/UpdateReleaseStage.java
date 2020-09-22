@@ -2,6 +2,7 @@ package io.jenkins.plugins.jenkinswork.postbuild;
 
 import hudson.Extension;
 import hudson.Launcher;
+import hudson.matrix.*;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
@@ -17,10 +18,13 @@ import org.kohsuke.stapler.StaplerRequest;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
-public class UpdateReleaseStage extends Recorder {
+public class UpdateReleaseStage extends Recorder implements MatrixAggregatable {
+    private static final Logger LOGGER = Logger.getLogger(UpdateReleaseStage.class.getName());
     private String releasePrefix = null, stage = null;
 
     public String getReleasePrefix() {
@@ -44,8 +48,34 @@ public class UpdateReleaseStage extends Recorder {
     public BuildStepMonitor getRequiredMonitorService() {
         return BuildStepMonitor.NONE;
     }
+
+    //This method will run this action only in Matrix parent job
+    public MatrixAggregator createAggregator(MatrixBuild matrixbuild,
+                                             Launcher launcher, BuildListener buildlistener) {
+        return new MatrixAggregator(matrixbuild, launcher, buildlistener) {
+            @Override
+            public boolean endBuild() throws InterruptedException, IOException {
+                LOGGER.log(Level.FINE, "end build of {0}", this.build.getDisplayName());
+                return UpdateReleaseStage.this._perform(this.build, this.launcher, this.listener);
+            }
+
+            @Override
+            public boolean startBuild() throws InterruptedException, IOException {
+                LOGGER.log(Level.FINE, "end build of {0}", this.build.getDisplayName());
+                return true;
+            }
+        };
+    }
+
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+        if(build instanceof MatrixRun) {
+            return true;
+        }
+        return _perform(build,launcher,listener);
+    }
+
+    public boolean _perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
         return Release.getInstanceForUpdateStage(build, listener, releasePrefix, stage).updateReleaseStage();
     }
 
