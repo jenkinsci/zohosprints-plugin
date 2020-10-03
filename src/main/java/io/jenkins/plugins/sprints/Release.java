@@ -505,7 +505,6 @@ public class Release {
             if(!isEmpty(response)) {
                 JSONObject respObj = new JSONObject(response);
                 if(respObj.has("status") && respObj.getString("status").equals("success")){
-                    log.println(parseLogMessage("Items are associated", false));
                     log.println(parseLogMessage("Associated Item(s) : "+ respObj.getJSONArray("mappeditem"), false));
                 } else {
                     log.println(parseLogMessage(respObj.getString("message"), true));
