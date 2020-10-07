@@ -130,7 +130,7 @@ public class CreateRelease extends Recorder implements MatrixAggregatable {
             if(!releaseName.isEmpty()) {
                 return FormValidation.ok();
             }
-            return FormValidation.ok("error");
+            return FormValidation.error(Messages.prefix_message());
         }
         public FormValidation doCheckReleasePrefix(@QueryParameter final String releasePrefix) {
             if (releasePrefix.matches(Util.RELEASE_REGEX)) {
