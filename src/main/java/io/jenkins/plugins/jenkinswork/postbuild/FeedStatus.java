@@ -173,7 +173,7 @@ public class FeedStatus extends Recorder implements MatrixAggregatable {
             if (prefix.matches(Util.PROJECT_REGEX)) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.prefix_message());
+            return FormValidation.error(Messages.prefix_message("Project"));
         }
 
         /**

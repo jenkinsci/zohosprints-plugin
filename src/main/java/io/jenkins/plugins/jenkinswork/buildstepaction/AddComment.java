@@ -128,7 +128,7 @@ public class AddComment extends Builder {
             if (prefix.matches(Util.SPRINTSANDITEMREGEX)) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.prefix_message());
+            return FormValidation.error(Messages.prefix_message("Item"));
         }
 
         /**

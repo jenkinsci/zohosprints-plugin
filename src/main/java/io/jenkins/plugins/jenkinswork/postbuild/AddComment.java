@@ -160,7 +160,7 @@ public class AddComment extends Recorder implements MatrixAggregatable {
             if (prefix.matches(Util.SPRINTSANDITEMREGEX)) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.prefix_message());
+            return FormValidation.error(Messages.prefix_message("Item"));
         }
 
         /**

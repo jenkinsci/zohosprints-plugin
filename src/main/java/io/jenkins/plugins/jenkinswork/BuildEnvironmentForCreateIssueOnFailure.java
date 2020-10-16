@@ -193,7 +193,7 @@ public class BuildEnvironmentForCreateIssueOnFailure extends SimpleBuildWrapper 
             if (prefix.matches(Util.SPRINTSANDITEMREGEX)) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.prefix_message());
+            return FormValidation.error(Messages.prefix_message(null));
         }
 
         /**
@@ -206,7 +206,7 @@ public class BuildEnvironmentForCreateIssueOnFailure extends SimpleBuildWrapper 
            if (!name.isEmpty()) {
                return FormValidation.ok();
            }
-           return FormValidation.error(Messages.item_name_message());
+            return FormValidation.error(Messages.item_name_message("Item"));
         }
 
         /**
@@ -227,7 +227,7 @@ public class BuildEnvironmentForCreateIssueOnFailure extends SimpleBuildWrapper 
          * @return if Assignee is not empty or null then Ok else error
          */
         public FormValidation doCheckAssignee(@QueryParameter final String assignee) {
-            if (!assignee.isEmpty()) {
+            if (!assignee.isEmpty() && assignee.matches(Util.MAIL_REGEX)) {
                 return FormValidation.ok();
             }
             return FormValidation.error(Messages.mail_message());

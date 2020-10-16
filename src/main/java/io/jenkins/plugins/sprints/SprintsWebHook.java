@@ -589,6 +589,9 @@ public class SprintsWebHook {
         paramMap.put("issuetype", getItemType());
         if (assignee != null && !assignee.isEmpty()) {
             paramMap.put("assignee", assignee);
+            if(!assignee.matches(Util.MAIL_REGEX)){
+                throw new Exception("Given Mail id not valid");
+            }
         }
         return getClient(config.getCreateIussue(), RequestClient.METHOD_POST).execute();
     }

@@ -100,14 +100,14 @@ public class AssociateItemToRelease extends Recorder implements MatrixAggregatab
             if (releasePrefix.matches(Util.RELEASE_REGEX)) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.prefix_message());
+            return FormValidation.error(Messages.prefix_message("Release"));
         }
 
         public FormValidation doCheckItemPrefix(@QueryParameter final String itemPrefix) {
             if (itemPrefix.matches(Util.ITEM_REGEX)) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.prefix_message());
+            return FormValidation.error(Messages.prefix_message("Item"));
         }
 
         @Override

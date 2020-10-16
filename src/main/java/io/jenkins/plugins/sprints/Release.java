@@ -389,10 +389,10 @@ public class Release {
      * @return Boolean
      */
     private boolean isOwnerNULLorEmpty() {
-        if(!isEmpty(owner)){
+        if(!isEmpty(owner) && owner.matches(Util.MAIL_REGEX)){
             return true;
         }
-        listener.getLogger().println(parseLogMessage("Release Owner should not be empty", true));
+        listener.getLogger().println(parseLogMessage("Release Owner mail id empty or not in valid format", true));
         return false;
     }
 

@@ -4,6 +4,7 @@ import hudson.Extension;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.util.ListBoxModel;
+import io.jenkins.plugins.Messages;
 import io.jenkins.plugins.sprints.SprintsWebHook;
 import io.jenkins.plugins.util.Util;
 import org.jenkinsci.plugins.workflow.steps.AbstractStepDescriptorImpl;
@@ -114,7 +115,7 @@ public class AddItemStep extends AbstractStepImpl {
         @Nonnull
         @Override
         public String getDisplayName() {
-            return "[Sprints] Create Issue";
+            return Messages.create_item();
         }
 
         /**

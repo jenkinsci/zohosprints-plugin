@@ -92,14 +92,14 @@ public class UpdateReleaseStage extends Recorder implements MatrixAggregatable {
             if (releasePrefix.matches(Util.RELEASE_REGEX)) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.prefix_message());
+            return FormValidation.error(Messages.prefix_message("Release"));
         }
 
         public FormValidation doCheckStage(@QueryParameter final String stage) {
             if (!isEmpty(stage)) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.prefix_message());
+            return FormValidation.error(Messages.item_name_message("Stage"));
         }
 
 

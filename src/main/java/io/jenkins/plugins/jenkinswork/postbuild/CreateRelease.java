@@ -123,48 +123,48 @@ public class CreateRelease extends Recorder implements MatrixAggregatable {
             if (prefix.matches(Util.PROJECT_REGEX)) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.prefix_message());
+            return FormValidation.error(Messages.prefix_message("Project"));
         }
 
         public FormValidation doCheckReleaseName(@QueryParameter final String releaseName) {
             if(!releaseName.isEmpty()) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.prefix_message());
+            return FormValidation.error(Messages.item_name_message("Release"));
         }
         public FormValidation doCheckReleasePrefix(@QueryParameter final String releasePrefix) {
             if (releasePrefix.matches(Util.RELEASE_REGEX)) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.prefix_message());
+            return FormValidation.error(Messages.prefix_message("Release"));
         }
 
         public FormValidation doCheckItemPrefix(@QueryParameter final String itemPrefix) {
             if (itemPrefix.matches(Util.ITEM_REGEX)) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.prefix_message());
+            return FormValidation.error(Messages.prefix_message("Item"));
         }
 
         public FormValidation doCheckStage(@QueryParameter final String stage) {
             if (!isEmpty(stage)) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.prefix_message());
+            return FormValidation.error(Messages.item_name_message("Stage"));
         }
 
         public FormValidation doCheckDescription(@QueryParameter final String description) {
             if (!isEmpty(description)) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.prefix_message());
+            return FormValidation.error(Messages.description_message());
         }
 
         public FormValidation doCheckOwner(@QueryParameter final String owner) {
-            if (!isEmpty(owner)) {
+            if (!isEmpty(owner) && owner.matches(Util.MAIL_REGEX)) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.prefix_message());
+            return FormValidation.error(Messages.mail_message());
         }
 
         @Override

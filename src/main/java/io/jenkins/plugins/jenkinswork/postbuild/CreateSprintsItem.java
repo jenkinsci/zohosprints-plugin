@@ -185,7 +185,7 @@ public class CreateSprintsItem extends Recorder implements MatrixAggregatable {
             if (prefix.matches(Util.ADD_ITEM_REGEX)) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.prefix_message());
+            return FormValidation.error(Messages.prefix_message(null));
         }
 
         /**
@@ -198,7 +198,7 @@ public class CreateSprintsItem extends Recorder implements MatrixAggregatable {
             if (!name.isEmpty()) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.item_name_message());
+            return FormValidation.error(Messages.item_name_message("Item"));
         }
 
         /**
@@ -219,7 +219,7 @@ public class CreateSprintsItem extends Recorder implements MatrixAggregatable {
          * @return if param is not null or empty then OK else Error
          */
         public FormValidation doCheckAssignee(@QueryParameter final String assignee) {
-            if (!assignee.isEmpty()) {
+            if (!assignee.isEmpty() && assignee.matches(Util.MAIL_REGEX)) {
                 return FormValidation.ok();
             }
             return FormValidation.error(Messages.mail_message());

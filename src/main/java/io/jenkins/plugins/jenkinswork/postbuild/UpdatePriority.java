@@ -151,7 +151,7 @@ public class UpdatePriority extends Recorder implements MatrixAggregatable {
             if (prefix.matches(Util.ITEM_REGEX)) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.prefix_message());
+            return FormValidation.error(Messages.prefix_message("Item"));
         }
 
         /**

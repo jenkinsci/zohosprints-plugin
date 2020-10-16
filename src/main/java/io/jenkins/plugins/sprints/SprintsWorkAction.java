@@ -424,23 +424,18 @@ public class SprintsWorkAction {
        // SprintActionInterface item = AddItem.getInstance();
         //item.setProjectGivenForCreateItem(prefix);
         try {
-           /* item.setItemName(itemName);
-            item.setDesc(itemDesc);
-            item.setType(itemType);
-            item.setLogFileAdded(isItemAddAttachment);
-            item.setAssignee(itemAssignee);*/
+            if(!itemAssignee.matches(Util.MAIL_REGEX)) {
+                listener.getLogger().println(parseLogMessage("Assignee mail id is not valid", true));
+                return false;
+            }
             String response = SprintsWebHook.getInstanceForCreateItem(build, listener, prefix, itemName, itemDesc,
                                                     itemType, itemAssignee, isItemAddAttachment).createItem();
             Object respObject = Util.parseResponse(response, "status");
             if (respObject != null && respObject.toString().equals("success")) {
                 listener.getLogger().println(parseLogMessage("Item created", false));
-                //item.setCreationStatus("Item created");
             } else {
                 listener.getLogger().println(parseLogMessage("Item not created", true));
-                //item.setCreationStatus("Item not created");
             }
-           /* setListOfObject(item);
-            configBuildAction();*/
             return true;
         } catch (Exception e) {
             listener.getLogger().println(parseLogMessage("error occured and issue not updated", true));
