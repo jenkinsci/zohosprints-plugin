@@ -476,6 +476,7 @@ public class Release {
                         log.println(parseLogMessage("Associated Item(s) : "+ respObj.getJSONArray("mappeditem"), false));
                     }
                 } else {
+                    log.println(parseLogMessage("Release not Created", true));
                     log.println(parseLogMessage(respObj.getString("message"), true));
                 }
                 return true;

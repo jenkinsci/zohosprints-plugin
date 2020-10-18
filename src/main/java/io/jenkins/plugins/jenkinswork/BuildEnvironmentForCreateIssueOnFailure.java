@@ -227,7 +227,20 @@ public class BuildEnvironmentForCreateIssueOnFailure extends SimpleBuildWrapper 
          * @return if Assignee is not empty or null then Ok else error
          */
         public FormValidation doCheckAssignee(@QueryParameter final String assignee) {
-            if (!assignee.isEmpty() && assignee.matches(Util.MAIL_REGEX)) {
+            boolean isValid = false;
+            if(!isEmpty(assignee) && assignee.contains(",")) {
+                String[] mails = assignee.split(",");
+                for(int ms = 0; ms < mails.length; ms++) {
+                    if(mails[ms].matches(Util.MAIL_REGEX)){
+                        isValid = true;
+                    } else {
+                        isValid = false;
+                    }
+                }
+            } else if(!isEmpty(assignee) && assignee.matches(Util.MAIL_REGEX)) {
+                isValid = true;
+            }
+            if (isValid) {
                 return FormValidation.ok();
             }
             return FormValidation.error(Messages.mail_message());

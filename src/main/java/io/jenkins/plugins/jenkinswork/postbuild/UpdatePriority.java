@@ -147,7 +147,7 @@ public class UpdatePriority extends Recorder implements MatrixAggregatable {
          * @param prefix For Which Sprint Item priority to getupdate
          * @return if prefix matches the regex the OK else Error
          */
-        public FormValidation doCheckPrefic(@QueryParameter final String prefix) {
+        public FormValidation doCheckPrefix(@QueryParameter final String prefix) {
             if (prefix.matches(Util.ITEM_REGEX)) {
                 return FormValidation.ok();
             }

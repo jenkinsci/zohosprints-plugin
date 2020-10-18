@@ -161,7 +161,20 @@ public class CreateRelease extends Recorder implements MatrixAggregatable {
         }
 
         public FormValidation doCheckOwner(@QueryParameter final String owner) {
-            if (!isEmpty(owner) && owner.matches(Util.MAIL_REGEX)) {
+            boolean isValid = false;
+            if(!isEmpty(owner) && owner.contains(",")) {
+                String[] mails = owner.split(",");
+                for(int ms = 0; ms < mails.length; ms++) {
+                    if(mails[ms].matches(Util.MAIL_REGEX)){
+                        isValid = true;
+                    } else {
+                        isValid = false;
+                    }
+                }
+            } else if(!isEmpty(owner) && owner.matches(Util.MAIL_REGEX)) {
+                isValid = true;
+            }
+            if (isValid) {
                 return FormValidation.ok();
             }
             return FormValidation.error(Messages.mail_message());

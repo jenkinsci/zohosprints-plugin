@@ -28,6 +28,9 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 /**
  *@author selvavignesh.m
  * @version 1.0
@@ -185,7 +188,7 @@ public class CreateSprintsItem extends Recorder implements MatrixAggregatable {
             if (prefix.matches(Util.ADD_ITEM_REGEX)) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.prefix_message(null));
+            return FormValidation.error(Messages.prefix_message("Project"));
         }
 
         /**
@@ -219,7 +222,20 @@ public class CreateSprintsItem extends Recorder implements MatrixAggregatable {
          * @return if param is not null or empty then OK else Error
          */
         public FormValidation doCheckAssignee(@QueryParameter final String assignee) {
-            if (!assignee.isEmpty() && assignee.matches(Util.MAIL_REGEX)) {
+            boolean isValid = false;
+            if(!isEmpty(assignee) && assignee.contains(",")) {
+                String[] mails = assignee.split(",");
+                for(int ms = 0; ms < mails.length; ms++) {
+                    if(mails[ms].matches(Util.MAIL_REGEX)){
+                        isValid = true;
+                    } else {
+                        isValid = false;
+                    }
+                }
+            } else if(!isEmpty(assignee) && assignee.matches(Util.MAIL_REGEX)) {
+                isValid = true;
+            }
+            if (isValid) {
                 return FormValidation.ok();
             }
             return FormValidation.error(Messages.mail_message());
