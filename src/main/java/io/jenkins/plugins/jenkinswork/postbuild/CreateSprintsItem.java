@@ -223,7 +223,10 @@ public class CreateSprintsItem extends Recorder implements MatrixAggregatable {
          */
         public FormValidation doCheckAssignee(@QueryParameter final String assignee) {
             boolean isValid = false;
-            if(!isEmpty(assignee) && assignee.contains(",")) {
+            if(isEmpty(assignee)) {
+                isValid = true;
+            }
+            else if(!isEmpty(assignee) && assignee.contains(",")) {
                 String[] mails = assignee.split(",");
                 for(int ms = 0; ms < mails.length; ms++) {
                     if(mails[ms].matches(Util.MAIL_REGEX)){

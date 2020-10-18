@@ -3,6 +3,7 @@ package io.jenkins.plugins.sprints;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import io.jenkins.plugins.util.Util;
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -424,7 +425,7 @@ public class SprintsWorkAction {
        // SprintActionInterface item = AddItem.getInstance();
         //item.setProjectGivenForCreateItem(prefix);
         try {
-            if(!itemAssignee.matches(Util.MAIL_REGEX)) {
+            if(!StringUtils.isEmpty(itemAssignee) && !itemAssignee.matches(Util.MAIL_REGEX)) {
                 listener.getLogger().println(parseLogMessage("Assignee mail id is not valid", true));
                 return false;
             }

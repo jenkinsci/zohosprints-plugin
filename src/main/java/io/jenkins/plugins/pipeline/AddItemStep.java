@@ -105,7 +105,7 @@ public class AddItemStep extends AbstractStepImpl {
          */
         @Override
         public String getFunctionName() {
-            return "addSprintsItem";
+            return "sprintsAddItem";
         }
 
         /**
