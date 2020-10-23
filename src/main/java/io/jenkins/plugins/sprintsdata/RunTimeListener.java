@@ -122,7 +122,7 @@ public class RunTimeListener extends RunListener<Run<?, ?>> {
                                                                     type, assignee, isLogAvailable).createItem();
                     Object respObject = Util.parseResponse(resp, "status");
                     if (respObject != null && respObject.toString().equals("success")) {
-                        listener.getLogger().println(sprintsLogparser("Item created on Build Failure", true));
+                        listener.getLogger().println(sprintsLogparser("Item created on Build Failure", false));
                     } else {
                         listener.getLogger().println(sprintsLogparser("Item not created on Build Failure", true));
                     }

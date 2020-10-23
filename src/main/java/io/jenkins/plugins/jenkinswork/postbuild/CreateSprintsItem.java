@@ -195,7 +195,7 @@ public class CreateSprintsItem extends Recorder implements MatrixAggregatable {
          *
          * @param name Name of the Sprints Item
          * @return if param is not null or empty then OK else Error
-         */ 
+         */
         public FormValidation doCheckName(@QueryParameter final String name) {
 
             if (!name.isEmpty()) {
