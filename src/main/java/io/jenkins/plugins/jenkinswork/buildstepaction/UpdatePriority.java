@@ -13,6 +13,7 @@ import io.jenkins.plugins.Messages;
 import io.jenkins.plugins.sprints.SprintsWorkAction;
 import io.jenkins.plugins.util.Util;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -113,8 +114,9 @@ public class UpdatePriority extends Builder {
          * @return if prefix matches the regex the OK else Error
          */
         public FormValidation doCheckPrefix(@QueryParameter final String prefix) {
-
-            if (prefix.matches(Util.ITEM_REGEX)) {
+            if(StringUtils.isEmpty(prefix)) {
+                return FormValidation.validateRequired(prefix);
+            } else if (prefix.matches(Util.ITEM_REGEX)) {
                 return FormValidation.ok();
             }
             return FormValidation.error(Messages.prefix_message("Item"));
@@ -126,7 +128,9 @@ public class UpdatePriority extends Builder {
          * @return if param is not null or empty then OK else Error
          */
         public FormValidation doCheckPriority(@QueryParameter final String priority) {
-            if (!priority.isEmpty()) {
+            if(StringUtils.isEmpty(priority)) {
+                return FormValidation.validateRequired(priority);
+            } else if (!priority.isEmpty()) {
                 return FormValidation.ok();
             }
             return FormValidation.error(Messages.priority_message());

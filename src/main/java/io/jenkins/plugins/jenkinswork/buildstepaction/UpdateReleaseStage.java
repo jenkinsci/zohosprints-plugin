@@ -13,6 +13,7 @@ import io.jenkins.plugins.Messages;
 import io.jenkins.plugins.sprints.Release;
 import io.jenkins.plugins.util.Util;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -58,18 +59,23 @@ public class UpdateReleaseStage extends Builder {
             return true;
         }
         public FormValidation doCheckReleasePrefix(@QueryParameter final String releasePrefix) {
-            if (releasePrefix.matches(Util.RELEASE_REGEX)) {
+            if(StringUtils.isEmpty(releasePrefix)) {
+                return FormValidation.validateRequired(releasePrefix);
+            } else if (releasePrefix.matches(Util.RELEASE_REGEX)) {
                 return FormValidation.ok();
             }
             return FormValidation.error(Messages.prefix_message("Release"));
         }
 
         public FormValidation doCheckStage(@QueryParameter final String stage) {
-            if (!isEmpty(stage)) {
+            if(StringUtils.isEmpty(stage)) {
+                return FormValidation.validateRequired(stage);
+            } else if (!isEmpty(stage)) {
                 return FormValidation.ok();
             }
             return FormValidation.error(Messages.item_name_message("Stage"));
         }
+
 
 
         @Override

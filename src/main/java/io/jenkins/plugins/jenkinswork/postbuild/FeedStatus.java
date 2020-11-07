@@ -19,6 +19,7 @@ import io.jenkins.plugins.Messages;
 import io.jenkins.plugins.sprints.SprintsWorkAction;
 import io.jenkins.plugins.util.Util;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -169,8 +170,10 @@ public class FeedStatus extends Recorder implements MatrixAggregatable {
          * @param prefix In which Project feed to be pushed
          * @return if prefix matches the regex the OK else Error
          */
-        public FormValidation doCheckPrefix(@QueryParameter final String prefix) {
-            if (prefix.matches(Util.PROJECT_REGEX)) {
+        public FormValidation doCheckPrefix(@QueryParameter String prefix) {
+            if(StringUtils.isEmpty(prefix)) {
+                return FormValidation.validateRequired(prefix);
+            } else if (prefix.matches(Util.PROJECT_REGEX)) {
                 return FormValidation.ok();
             }
             return FormValidation.error(Messages.prefix_message("Project"));
@@ -181,8 +184,10 @@ public class FeedStatus extends Recorder implements MatrixAggregatable {
          * @param value Feed Status to be pushed
          * @return if param is not null or empty then OK else Error
          */
-        public FormValidation doCheckStatus(@QueryParameter final String value) {
-            if (!value.isEmpty()) {
+        public FormValidation doCheckStatus(@QueryParameter String value) {
+            if(StringUtils.isEmpty(value)) {
+                return FormValidation.validateRequired(value);
+            } else if (!value.isEmpty()) {
                 return FormValidation.ok();
             }
             return FormValidation.error(Messages.feed_status_message());

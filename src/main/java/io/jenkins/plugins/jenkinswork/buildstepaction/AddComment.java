@@ -14,6 +14,7 @@ import io.jenkins.plugins.Messages;
 import io.jenkins.plugins.sprints.SprintsWorkAction;
 import io.jenkins.plugins.util.Util;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -124,7 +125,9 @@ public class AddComment extends Builder {
          * @return if prefix matches the regex the OK else Error
          */
         public FormValidation doCheckPrefix(@QueryParameter final String prefix) {
-
+            if(StringUtils.isEmpty(prefix)){
+                return FormValidation.validateRequired(prefix);
+            }
             if (prefix.matches(Util.SPRINTSANDITEMREGEX)) {
                 return FormValidation.ok();
             }
@@ -137,7 +140,9 @@ public class AddComment extends Builder {
          * @return if param is not null or empty then OK else Error
          */
         public FormValidation doCheckNote(@QueryParameter final String note) {
-
+            if(StringUtils.isEmpty(note)){
+                return FormValidation.validateRequired(note);
+            }
             if (!note.isEmpty()) {
                 return FormValidation.ok();
             }

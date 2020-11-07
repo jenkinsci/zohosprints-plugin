@@ -11,20 +11,20 @@
     <artifactId>zohosprints</artifactId>
     <version>1.1.3-SNAPSHOT</version>
     <packaging>hpi</packaging>
+    <name>Zoho Sprints</name>
+    <description>Plugin which wil help to do action from jenkins while running the job</description>
+    <url>https://github.com/jenkinsci/zohosprints-plugin</url>
     <properties>
         <jenkins.version>2.7.3</jenkins.version>
         <java.level>8</java.level>
         <changelist>-SNAPSHOT</changelist>
     </properties>
-    <name>Zoho Sprints</name>
-    <description>Plugin which wil help to do action from jenkins while running the job</description>
     <licenses>
         <license>
             <name>MIT License</name>
             <url>https://opensource.org/licenses/MIT</url>
         </license>
     </licenses>
-    <url>https://github.com/jenkinsci/zohosprints-plugin</url>
     <scm>
         <connection>scm:git:git://github.com/jenkinsci/zohosprints-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/zohosprints-plugin.git</developerConnection>

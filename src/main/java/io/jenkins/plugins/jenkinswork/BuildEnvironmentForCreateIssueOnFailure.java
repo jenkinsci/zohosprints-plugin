@@ -20,6 +20,7 @@ import io.jenkins.plugins.Messages;
 import io.jenkins.plugins.util.Util;
 import jenkins.tasks.SimpleBuildWrapper;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -190,45 +191,51 @@ public class BuildEnvironmentForCreateIssueOnFailure extends SimpleBuildWrapper 
          * @return if prefix matches the regex then true else error message
          */
         public FormValidation doCheckPrefix(@QueryParameter final String prefix) {
-            if (prefix.matches(Util.SPRINTSANDITEMREGEX)) {
+            if(StringUtils.isEmpty(prefix)) {
+                return FormValidation.validateRequired(prefix);
+            } else if (prefix.matches(Util.ADD_ITEM_REGEX)) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.prefix_message(null));
+            return FormValidation.error(Messages.prefix_message("Project"));
         }
 
         /**
          *
-         * @param name Name of the Issue
-         * @return if name is not empty or null then Ok else error
+         * @param name Name of the Sprints Item
+         * @return if param is not null or empty then OK else Error
          */
         public FormValidation doCheckName(@QueryParameter final String name) {
-
-           if (!name.isEmpty()) {
-               return FormValidation.ok();
-           }
-            return FormValidation.error(Messages.item_name_message("Item"));
+            if (!name.isEmpty() ) {
+                return FormValidation.ok();
+            }
+            return FormValidation.validateRequired(name);
+            //return FormValidation.error(Messages.item_name_message("Item"));
         }
 
         /**
          *
          * @param description Description of the Sprints Item
-         * @return if description is not empty or null then Ok else error
+         * @return if param is not null or empty then OK else Error
          */
         public FormValidation doCheckDescription(@QueryParameter final String description) {
             if (!description.isEmpty()) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.description_message());
+            return FormValidation.validateRequired(description);
+            //return FormValidation.error(Messages.description_message());
         }
 
         /**
          *
          * @param assignee Assignee of the Sprint Item
-         * @return if Assignee is not empty or null then Ok else error
+         * @return if param is not null or empty then OK else Error
          */
         public FormValidation doCheckAssignee(@QueryParameter final String assignee) {
             boolean isValid = false;
-            if(!isEmpty(assignee) && assignee.contains(",")) {
+            if(isEmpty(assignee)) {
+                isValid = true;
+            }
+            else if(!isEmpty(assignee) && assignee.contains(",")) {
                 String[] mails = assignee.split(",");
                 for(int ms = 0; ms < mails.length; ms++) {
                     if(mails[ms].matches(Util.MAIL_REGEX)){

@@ -13,6 +13,7 @@ import io.jenkins.plugins.Messages;
 import io.jenkins.plugins.sprints.Release;
 import io.jenkins.plugins.util.Util;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -52,14 +53,18 @@ public class AssociateItemToRelease extends Builder {
         }
 
         public FormValidation doCheckReleasePrefix(@QueryParameter final String releasePrefix) {
-            if (releasePrefix.matches(Util.RELEASE_REGEX)) {
+            if (StringUtils.isEmpty(releasePrefix)) {
+                return FormValidation.validateRequired(releasePrefix);
+            } else if (releasePrefix.matches(Util.RELEASE_REGEX)) {
                 return FormValidation.ok();
             }
             return FormValidation.error(Messages.prefix_message("Release"));
         }
 
         public FormValidation doCheckItemPrefix(@QueryParameter final String itemPrefix) {
-            if (itemPrefix.matches(Util.ITEM_REGEX)) {
+            if (StringUtils.isEmpty(itemPrefix)) {
+                return FormValidation.validateRequired(itemPrefix);
+            } else if (itemPrefix.matches(Util.ITEM_REGEX)) {
                 return FormValidation.ok();
             }
             return FormValidation.error(Messages.prefix_message("Item"));

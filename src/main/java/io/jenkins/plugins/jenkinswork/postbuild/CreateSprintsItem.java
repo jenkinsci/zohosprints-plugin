@@ -20,6 +20,7 @@ import io.jenkins.plugins.Messages;
 import io.jenkins.plugins.sprints.SprintsWorkAction;
 import io.jenkins.plugins.util.Util;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -185,7 +186,9 @@ public class CreateSprintsItem extends Recorder implements MatrixAggregatable {
          * @return if prefix matches the regex the OK else Error
          */
         public FormValidation doCheckPrefix(@QueryParameter final String prefix) {
-            if (prefix.matches(Util.ADD_ITEM_REGEX)) {
+            if(StringUtils.isEmpty(prefix)) {
+                return FormValidation.validateRequired(prefix);
+            } else if (prefix.matches(Util.ADD_ITEM_REGEX)) {
                 return FormValidation.ok();
             }
             return FormValidation.error(Messages.prefix_message("Project"));
@@ -197,11 +200,11 @@ public class CreateSprintsItem extends Recorder implements MatrixAggregatable {
          * @return if param is not null or empty then OK else Error
          */
         public FormValidation doCheckName(@QueryParameter final String name) {
-
-            if (!name.isEmpty()) {
+            if (!name.isEmpty() ) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.item_name_message("Item"));
+            return FormValidation.validateRequired(name);
+            //return FormValidation.error(Messages.item_name_message("Item"));
         }
 
         /**
@@ -213,7 +216,8 @@ public class CreateSprintsItem extends Recorder implements MatrixAggregatable {
             if (!description.isEmpty()) {
                 return FormValidation.ok();
             }
-            return FormValidation.error(Messages.description_message());
+            return FormValidation.validateRequired(description);
+            //return FormValidation.error(Messages.description_message());
         }
 
         /**
