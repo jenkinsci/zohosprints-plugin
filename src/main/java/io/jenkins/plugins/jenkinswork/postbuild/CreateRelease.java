@@ -201,7 +201,7 @@ public class CreateRelease extends Recorder implements MatrixAggregatable {
             }
             if (!isNumeric(period)) {
                 return FormValidation.error("Release Time should be a Number");
-            } else if(Integer.valueOf(period) > 3) {
+            } else if(Integer.parseInt(period) > 3) {
                 return FormValidation.ok();
             }
             return FormValidation.error("Release Time should be a minimum of three days");
