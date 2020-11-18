@@ -73,9 +73,53 @@ You can add a comment to your sprint or work item from Jenkins.
    - **Add attachment:** If you would like to attach the log files of your build, you can choose Yes, add. The build log file will be attached to the relevant item's comment. 
 5. Save and Apply your changes.
 
+## Add New Release 
+ 1. Sign In to your **Jenkins** account.
+ 2. Navigate to the **Build**.
+ 3. Click **Configure** from the left menu.
+ 4. Select **Add build step** under the **Build section**.
+ 5. Click **[Zoho Sprints] Add New Release**.
+     - **Project Prefix:**  Enter the relevant project number here.  Example: P1(P1 - Project number).
+     - **Item Prefix:** Enter the prefix of the items that will be associated to the release.
+     - **Description:** Add a description to your release.
+     - **Stage:** Choose the stage of the release.
+     - **Release Owner:** Enter the email address of the release owner.
+     - **Release Time (In Days):** Enter the number of days required for the release. 
+  6. **Save** and **Apply** your changes.
+  7. Click **Build Now** to trigger the API.
+
+> Note: 
+> - 1.The stage should not be 'completed'.
+> - 2.Release Time should be a minimum of three days.
+
+## Update Release Stage 
+
+ 1. Sign In to your **Jenkins** account.
+ 2. Navigate to the **Build.**
+ 3. Click **Configure** from the left menu.
+ 4. Select **Add build step** under the Build section.
+ 5. Click **[Zoho Sprints] Update Release Stage**. 
+    - **Prefix:**  Enter the relevant project and release ID here.  Example: P1#R10 (P1 - Project number, R10 - Release number). 
+    - **Stage:** Enter the stage to which you'd like to update the release.
+ 6. **Save** and **Apply** your changes.
+ 7. Click **Build Now** to trigger the API
+ 
+ ## Associate Items to Release
+ 1. Sign In to your **Jenkins** account.
+ 2. Navigate to the **Build.**
+ 3. Click **Configure** from the left menu.
+ 4. Select **Add build step** under the Build section.
+ 5. Click **[Zoho Sprints] Associate Item(s) to Release.**
+    - **Prefix:**  Enter the relevant project and release ID here.  Example: P1#R10 (P1 - Project number, R10 - Release number). Multiple Items can be mapped to a single release.
+    - **Item to Map:** Enter the **prefix** of your Item ID to map. 
+ 6. **Save** and **Apply** your changes.
+ 7. Click **Build Now** to trigger the API.
+ 
+ > Note: A maximum of 15 items can be mapped
+
 # Post build actions in Jenkins
 
-You can perform the other actions like status and priority update, adding feed status and comment to work item in your post build actions
+You can perform the other actions like status and priority update, adding feed status, adding new release, release stage update, associate itemsto release and comment to work item in your post build actions
 
 ## Create new item
 
@@ -85,7 +129,7 @@ You can create a new work item to your backlog or sprint in your Post Build from
 2. Click **Configure** from the left menu.
 3. Select **Add post-build action** under the Post-build Actions.
 4. Choose **[Zoho Sprints] Create New Item**.
-    - **Prefix:** Enter the prefix. Example: P8#S4 (P1 - Project ID, S2 - Sprint Number) or P8#S0 (P8 - Project ID, S0 - Backlog ID).
+    - **Prefix:** Enter the prefix. Example: PI#S2#R1 (P1 - Project Number, S2 - Sprint Number/Backlog ID, R1 - Release Number). Release Number is Optional.
     - **Item Name:** Input your work item name.
     - **Item Description:** Enter description for your work item.
     - **Assign Item To:** Enter the email address of the portal user here. Note: The user should be in an active status. If the user hasn't confirmed his email address or is inactive, then the user will not be added as an assignee.
@@ -103,7 +147,7 @@ On build failure, you can automate and create a new work item.
 2. Click **Configure** from the left menu.
 3. Select **Build Environment**.
 4. Choose **[Zoho Sprints] Create Item on Failure**.
-    - **Prefix:** Enter the prefix. Example: P8#S4 (P1 - Project ID, S2 - Sprint Number) or P8#S0 (P8 - Project ID, S0 - Backlog ID). 
+    - **Prefix:** Enter the prefix. Example: PI#S2#R1 (P1 - Project Number, S2 - Sprint Number/Backlog ID, R1 - Release Number). Release Number is Optional. 
     - **Item Name:** Input your work item name.
     - **Item Description:** Enter description for your work item.
    - **Assign Item To:** Enter the email address of the portal user here. Note: The user should be in an active status. If the user has not confirmed his email address or is inactive, then the user will not be added as an assignee.
