@@ -54,14 +54,12 @@ public class SprintsConfig {
      * @return Team url
      */
     public String getUrl() {
-//        List<SprintsConnectionConfig> extnList =  new ArrayList<>(Jenkins.getInstance().getExtensionList(SprintsConnectionConfig.class));
-//        if (extnList.isEmpty()) {
-//            return null;
-//
-//        }
-//        SprintsConnectionConfig conf = extnList.get(0);
-//        return conf.getDoamin();
-        return this.url;
+        List<SprintsConnectionConfig> extnList =  new ArrayList<>(Jenkins.getInstance().getExtensionList(SprintsConnectionConfig.class));
+        if (extnList.isEmpty()) {
+            return this.url;
+        }
+       SprintsConnectionConfig conf = extnList.get(0);
+        return conf.getDoamin();
     }
 
     /**
