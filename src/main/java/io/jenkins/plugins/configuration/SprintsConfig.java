@@ -206,7 +206,7 @@ public class SprintsConfig {
             if(this.url.contains("zoho.com.au")) {
                 domainUrl.append(split[domainLength-3]).append(".");
             }
-           else  if(!this.url.contains("zoho.com") && !this.url.contains("zoho.in") && !this.url.contains("zoho.eu")) {
+           else  if(!this.url.contains("zoho.com") && !this.url.contains("zoho.in") && !this.url.contains("zoho.eu") && !url.contains("zoho.jp")) {
                 domainUrl.append(split[domainLength-3]).append(".");
             }
            domainUrl.append(split[domainLength -2]);
