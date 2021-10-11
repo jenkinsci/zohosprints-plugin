@@ -54,15 +54,14 @@ public class SprintsConfig {
      * @return Team url
      */
     public String getUrl() {
-//        List<SprintsConnectionConfig> extnList =  new ArrayList<>(Jenkins.getInstance().getExtensionList(SprintsConnectionConfig.class));
-//        if (extnList.isEmpty()) {
-//            return null;
-//
-//        }
-//        SprintsConnectionConfig conf = extnList.get(0);
-//        return conf.getDoamin();
-        return this.url;
+        List<SprintsConnectionConfig> extnList =  new ArrayList<>(Jenkins.getInstance().getExtensionList(SprintsConnectionConfig.class));
+        if (extnList.isEmpty()) {
+            return this.url;
+        }
+       SprintsConnectionConfig conf = extnList.get(0);
+        return conf.getDoamin();
     }
+
 
     /**
      *
@@ -208,7 +207,7 @@ public class SprintsConfig {
             if(this.url.contains("zoho.com.au")) {
                 domainUrl.append(split[domainLength-3]).append(".");
             }
-           else  if(!this.url.contains("zoho.com") && !this.url.contains("zoho.in") && !this.url.contains("zoho.eu")) {
+           else  if(!this.url.contains("zoho.com") && !this.url.contains("zoho.in") && !this.url.contains("zoho.eu") && !url.contains("zoho.jp")) {
                 domainUrl.append(split[domainLength-3]).append(".");
             }
            domainUrl.append(split[domainLength -2]);

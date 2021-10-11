@@ -9,7 +9,7 @@
             <f:textbox value="${connection.name}"/>
             <input type="hidden" name="id" value="${connection}"/>
           </f:entry>
-          <f:entry title="${%Sprints team URL}" field="url" description="${%The complete URL to the Sprints url} (${%e.g. http://sprints.zoho.com})">
+          <f:entry title="${%Sprints team URL}" field="url" description="${%The complete URL to the Sprints url} (${%e.g. https://sprints.zoho.com})">
             <f:textbox value="${connection.url}"/>
           </f:entry>
           <f:entry title="${%Sprints team Admin mailid}" field="mailid" description="${%Sprints team Admin mailid} (${%e.g. aa@xx.com})">
