@@ -62,6 +62,7 @@ public class SprintsConfig {
         return conf.getDoamin();
     }
 
+
     /**
      *
      * @return Admin mailid
