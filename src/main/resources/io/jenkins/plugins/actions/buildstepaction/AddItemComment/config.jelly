@@ -1,0 +1,15 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+        <f:entry title="Project Number" field="projectNumber">
+            <f:textbox/>
+        </f:entry>
+        <f:entry title="Sprint Number" field="sprintNumber">
+            <f:textbox/>
+        </f:entry>
+        <f:entry title="Item Number" field="itemNumber">
+            <f:textbox/>
+        </f:entry>
+        <f:entry title="Add Comment " field="note">
+            <f:textarea />
+         </f:entry>
+</j:jelly>

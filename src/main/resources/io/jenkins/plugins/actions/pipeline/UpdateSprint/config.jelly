@@ -1,0 +1,27 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+        <f:entry title="Project Number" field="projectNumber">
+            <f:textbox/>
+        </f:entry>
+        <f:entry title="Sprint Number" field="sprintNumber">
+            <f:textbox/>
+        </f:entry>
+        <f:entry title="Sprint Name" field="name">
+          <f:textbox />
+        </f:entry>
+        <f:entry title="Description" field="description">
+          <f:textarea />
+        </f:entry>
+        <f:entry title="Duration" field="duration">
+          <f:textbox />
+        </f:entry>
+        <f:entry title="Start Date" field="startdate">
+          <f:textbox />
+        </f:entry>
+        <f:entry title="End Date" field="enddate">
+          <f:textbox />
+        </f:entry>
+        <f:entry title="Custom Fields" field="customFields">
+            <f:textarea />
+        </f:entry>
+</j:jelly>
