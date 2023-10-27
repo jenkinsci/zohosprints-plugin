@@ -25,6 +25,10 @@ public abstract class ReleasePostBuilder extends PostBuild {
         return (Release) super.getForm();
     }
 
+    public String getReleaseNumber() {
+        return getForm().getReleaseNumber();
+    }
+
     public String getName() {
         return getForm().getName();
     }

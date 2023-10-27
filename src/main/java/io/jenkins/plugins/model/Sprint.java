@@ -1,7 +1,8 @@
 package io.jenkins.plugins.model;
 
 public class Sprint extends BaseModel {
-    private String name, description, startdate, enddate, duration, users, note, scrummaster, customFields;
+    private String name, description, startdate, enddate, duration, users, note, scrummaster, customFields,
+            sprintNumber;
 
     public String getScrummaster() {
         return scrummaster;
@@ -13,7 +14,7 @@ public class Sprint extends BaseModel {
     }
 
     public String getDurationType() {
-        return getValue(description);
+        return description;
     }
 
     public Sprint setName(String name) {
@@ -21,12 +22,16 @@ public class Sprint extends BaseModel {
         return this;
     }
 
+    public String getSprintNumber() {
+        return sprintNumber;
+    }
+
     public String getName() {
-        return getValue(name);
+        return name;
     }
 
     public String getDescription() {
-        return getValue(description);
+        return description;
     }
 
     public Sprint setDescription(String description) {
@@ -35,7 +40,7 @@ public class Sprint extends BaseModel {
     }
 
     public String getStartdate() {
-        return getValue(startdate);
+        return startdate;
     }
 
     public Sprint setStartdate(String startdate) {
@@ -44,11 +49,11 @@ public class Sprint extends BaseModel {
     }
 
     public String getEnddate() {
-        return getValue(enddate);
+        return enddate;
     }
 
     public String getCustomFields() {
-        return getValue(customFields);
+        return customFields;
     }
 
     public Sprint setEnddate(String enddate) {
@@ -57,7 +62,7 @@ public class Sprint extends BaseModel {
     }
 
     public String getDuration() {
-        return getValue(duration);
+        return duration;
     }
 
     public Sprint setDuration(String duration) {
@@ -66,7 +71,7 @@ public class Sprint extends BaseModel {
     }
 
     public String getUsers() {
-        return getValue(users);
+        return users;
     }
 
     public Sprint setUsers(String users) {
@@ -75,7 +80,7 @@ public class Sprint extends BaseModel {
     }
 
     public String getNote() {
-        return getValue(note);
+        return note;
     }
 
     public Sprint setNote(String note) {

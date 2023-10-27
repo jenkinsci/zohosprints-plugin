@@ -1,5 +1,7 @@
 package io.jenkins.plugins.actions.postbuild;
 
+import java.util.function.Function;
+
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import hudson.Extension;
@@ -16,8 +18,8 @@ public class AddItemComment extends ItemPostBuilder {
     }
 
     @Override
-    public String perform() throws Exception {
-        return WorkItemAPI.getInstance().addComment(getForm());
+    public String perform(Function<String, String> replacer) throws Exception {
+        return WorkItemAPI.getInstance(replacer).addComment(getForm());
     }
 
     @Extension

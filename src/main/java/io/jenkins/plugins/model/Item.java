@@ -2,7 +2,7 @@ package io.jenkins.plugins.model;
 
 public class Item extends BaseModel {
     private String name, description, status, type, priority, duration, startdate, enddate, customFields,
-            assignee, note;
+            assignee, note, sprintNumber, itemNumber;
 
     private Item(String projectNumber, String sprintNumber) {
         super(projectNumber);
@@ -74,46 +74,54 @@ public class Item extends BaseModel {
     }
 
     public String getAssignee() {
-        return getValue(assignee);
+        return assignee;
     }
 
     public String getName() {
-        return getValue(name);
+        return name;
     }
 
     public String getDescription() {
-        return getValue(description);
+        return description;
     }
 
     public String getStatus() {
-        return getValue(status);
+        return status;
     }
 
     public String getType() {
-        return getValue(type);
+        return type;
     }
 
     public String getPriority() {
-        return getValue(priority);
+        return priority;
     }
 
     public String getDuration() {
-        return getValue(duration);
+        return duration;
     }
 
     public String getStartdate() {
-        return getValue(startdate);
+        return startdate;
     }
 
     public String getEnddate() {
-        return getValue(enddate);
+        return enddate;
     }
 
     public String getCustomFields() {
-        return getValue(customFields);
+        return customFields;
     }
 
     public String getNote() {
-        return getValue(note);
+        return note;
+    }
+
+    public String getSprintNumber() {
+        return sprintNumber;
+    }
+
+    public String getItemNumber() {
+        return itemNumber;
     }
 }

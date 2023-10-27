@@ -9,7 +9,7 @@ public class FeedStatus extends BaseModel {
     }
 
     public String getFeed() {
-        return getValue(feed);
+        return feed;
     }
 
     public static FeedStatus getInstance(String projectNumber, String feed) {

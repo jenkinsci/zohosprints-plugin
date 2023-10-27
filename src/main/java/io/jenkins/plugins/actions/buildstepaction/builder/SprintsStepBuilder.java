@@ -28,6 +28,10 @@ public abstract class SprintsStepBuilder extends BuildStep {
         return (Sprint) super.getForm();
     }
 
+    public String getSprintNumber() {
+        return getForm().getSprintNumber();
+    }
+
     public String getName() {
         return getForm().getName();
     }

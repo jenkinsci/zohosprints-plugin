@@ -1,38 +1,42 @@
 package io.jenkins.plugins.model;
 
 public class Release extends BaseModel {
-    private String name, goal, stage, startdate, enddate, customFields, owners, note;
+    private String name, goal, stage, startdate, enddate, customFields, owners, note, releaseNumber;
 
     public String getNote() {
         return note;
     }
 
+    public String getReleaseNumber() {
+        return releaseNumber;
+    }
+
     public String getName() {
-        return getValue(name);
+        return name;
     }
 
     public String getGoal() {
-        return getValue(goal);
+        return goal;
     }
 
     public String getStage() {
-        return getValue(stage);
+        return stage;
     }
 
     public String getStartdate() {
-        return getValue(startdate);
+        return startdate;
     }
 
     public String getEnddate() {
-        return getValue(enddate);
+        return enddate;
     }
 
     public String getCustomFields() {
-        return getValue(customFields);
+        return customFields;
     }
 
     public String getOwners() {
-        return getValue(owners);
+        return owners;
     }
 
     public Release setNote(String note) {

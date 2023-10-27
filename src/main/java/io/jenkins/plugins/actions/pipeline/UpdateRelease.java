@@ -22,13 +22,14 @@ public class UpdateRelease extends ReleasePipelineStep {
     }
 
     @Override
-    public StepExecution start(StepContext context) throws Exception {
-        setEnvironmentVariableReplacer(context);
+    public StepExecution execute(StepContext context, Function<String, String> replacer)
+            throws Exception {
         Function<String, String> executor = (key) -> {
             try {
-                return ReleaseAPI.getInstance().update(getForm());
+                return ReleaseAPI.getInstance(replacer)
+                        .update(getForm());
             } catch (Exception e) {
-                throw new ZSprintsException(e.getMessage());
+                throw new ZSprintsException(e.getMessage(), e);
             }
 
         };

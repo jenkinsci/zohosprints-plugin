@@ -1,5 +1,7 @@
 package io.jenkins.plugins.actions.buildstepaction;
 
+import java.util.function.Function;
+
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import hudson.Extension;
@@ -19,8 +21,8 @@ public class UpdateWorkItem extends ItemStepBuilder {
     }
 
     @Override
-    public String perform() throws Exception {
-        return WorkItemAPI.getInstance().updateItem(getForm());
+    public String perform(Function<String, String> replacer) throws Exception {
+        return WorkItemAPI.getInstance(replacer).updateItem(getForm());
     }
 
     @Extension

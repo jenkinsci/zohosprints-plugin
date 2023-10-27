@@ -1,5 +1,7 @@
 package io.jenkins.plugins.actions.buildstepaction;
 
+import java.util.function.Function;
+
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import hudson.Extension;
@@ -21,8 +23,8 @@ public class CompleteSprint extends BuildStep {
     }
 
     @Override
-    public String perform() throws Exception {
-        return SprintAPI.getInstance().complete(getForm());
+    public String perform(Function<String, String> replacer) throws Exception {
+        return SprintAPI.getInstance(replacer).complete(getForm());
     }
 
     @Extension

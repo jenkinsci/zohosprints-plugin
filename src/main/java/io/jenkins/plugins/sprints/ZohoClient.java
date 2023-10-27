@@ -7,6 +7,7 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -30,7 +31,9 @@ public class ZohoClient {
     private Map<String, String> header = new HashMap<>();
     private String api;
     private String method;
-    private boolean isJsonBodyresponse = false;
+    private boolean isJsonBodyresponse;
+    final ZSConnectionConfiguration config = getZSConnection();
+    Function<String, String> replaceparamValue;
 
     private ZohoClient() {
     }
@@ -39,34 +42,13 @@ public class ZohoClient {
         return new ZohoClient();
     }
 
-    public ZohoClient(String api, String method, String... relativeUrlParams) throws Exception {
-        this.api = constructUri(api, relativeUrlParams);
-        this.method = method;
-        setDefaultHeader();
-    }
+    public ZohoClient(Builder builder) throws Exception {
+        this.api = builder.url;
+        this.isJsonBodyresponse = builder.isJsonBodyresponse;
+        this.method = builder.method;
+        this.header = builder.header;
+        this.queryParam = builder.queryParam;
 
-    public void setDefaultHeader() {
-        header.put("X-ZA-SOURCE", "eiULZMmzMCRXCgFljRnxrA==");
-        header.put("Authorization", "Zoho-oauthtoken " + getZSConnection().getAccessToken());
-    }
-
-    public ZohoClient addParameter(String key, String value) {
-        if (key != null && value != null && !value.trim().isEmpty()) {
-            queryParam.put(key, value);
-        }
-        return this;
-    }
-
-    public ZohoClient setJsonBodyresponse(boolean isJsonBodyresponse) {
-        this.isJsonBodyresponse = isJsonBodyresponse;
-        return this;
-    }
-
-    public ZohoClient addParameter(String key, JSONArray value) {
-        if (value != null && !value.isEmpty()) {
-            queryParam.put(key, value);
-        }
-        return this;
     }
 
     public boolean isSuccessRequest() {
@@ -80,47 +62,31 @@ public class ZohoClient {
                 .build();
     }
 
+    private boolean isOAuthExpired(String response) {
+        return statusCode == HttpServletResponse.SC_BAD_REQUEST &&
+                new JSONObject(response).optInt("code", 0) == 7601;
+    }
+
     public String execute() throws Exception {
         logger.info(api);
-        prependDomain();
-        checkAndSetOAuthToken();
         RequestClient client = getClient();
         HttpResponse<String> response = client.execute();
         String responseString = response.body();
-        logger.info(responseString);
         statusCode = response.statusCode();
         if (isOAuthExpired(responseString)) {
+            logger.info("Retrying the request...");
             generateNewAccessToken();
             response = getClient().execute();
             responseString = response.body();
             statusCode = response.statusCode();
         }
-        logger.info(responseString);
         if (isSuccessRequest()) {
             return responseString;
         }
         throw new ZSprintsException(new JSONObject(responseString).toString());
     }
 
-    private boolean isOAuthExpired(String response) {
-        return statusCode == HttpServletResponse.SC_BAD_REQUEST &&
-                new JSONObject(response).optInt("code", 0) == 7601;
-    }
-
-    private void checkAndSetOAuthToken() throws Exception {
-        ZSConnectionConfiguration config = getZSConnection();
-        if (config.getAccessToken() != null && config.getAccessToken().length() == 0) {
-            generateNewAccessToken();
-        }
-        this.api = config.getZSApiPath() + api;
-    }
-
-    private void prependDomain() throws Exception {
-        this.api = getZSConnection().getZSApiPath() + api;
-    }
-
-    public synchronized void generateNewAccessToken() throws Exception {
-        ZSConnectionConfiguration config = getZSConnection();
+    public void generateNewAccessToken() throws Exception {
         logger.info("New Token method called");
         String accessToken = null;
         HttpResponse<String> response = new RequestClient.RequestClientBuilder(
@@ -148,18 +114,67 @@ public class ZohoClient {
         }
     }
 
-    private String constructUri(String url, String urlParams[]) throws Exception {
-        if (urlParams == null) {
-            return url;
+    public static class Builder {
+        String url, method;
+        Function<String, String> replacer;
+        String[] relativeUrlParams;
+        private Map<String, Object> queryParam = new HashMap<>();
+        private Map<String, String> header = new HashMap<>();
+        boolean isJsonBodyresponse = false;
+
+        public Builder(String url, String method, Function<String, String> replacer,
+                String... relativeUrlParams) throws Exception {
+            this.url = url;
+            this.method = method;
+            this.replacer = replacer;
+            this.relativeUrlParams = relativeUrlParams;
         }
-        StringBuffer urlBuilder = new StringBuffer();
-        Matcher matcher = RELATIVE_URL_PATTERN.matcher(url);
-        while (matcher.find()) {
-            matcher.appendReplacement(urlBuilder,
-                    URLEncoder.encode(urlParams[Integer.parseInt(matcher.group(1)) - 1],
-                            StandardCharsets.UTF_8.name()));
+
+        public Builder setJsonBodyresponse(boolean isJsonBodyresponse) {
+            this.isJsonBodyresponse = isJsonBodyresponse;
+            return this;
         }
-        matcher.appendTail(urlBuilder);
-        return urlBuilder.toString();
+
+        private void setDefaultHeader() {
+            header.put("X-ZA-SOURCE", "eiULZMmzMCRXCgFljRnxrA==");
+            header.put("Authorization", "Zoho-oauthtoken " + getZSConnection().getAccessToken());
+        }
+
+        private void constructURI() throws Exception {
+            StringBuffer urlBuilder = new StringBuffer();
+            Matcher matcher = RELATIVE_URL_PATTERN.matcher(url);
+            while (matcher.find()) {
+                matcher.appendReplacement(urlBuilder,
+                        URLEncoder.encode(replacer.apply(relativeUrlParams[Integer.parseInt(matcher.group(1)) - 1]),
+                                StandardCharsets.UTF_8.name()));
+            }
+            matcher.appendTail(urlBuilder);
+            url = urlBuilder.toString();
+        }
+
+        public Builder addParameter(String key, JSONArray value) {
+            if (value != null && !value.isEmpty()) {
+                queryParam.put(key, value);
+            }
+            return this;
+        }
+
+        public Builder addParameter(String key, String value) {
+            if (key != null && value != null && !value.trim().isEmpty()) {
+                queryParam.put(key, replacer.apply(value));
+            }
+            return this;
+        }
+
+        private void prependDomain() throws Exception {
+            url = getZSConnection().getZSApiPath() + url;
+        }
+
+        public ZohoClient build() throws Exception {
+            constructURI();
+            prependDomain();
+            setDefaultHeader();
+            return new ZohoClient(this);
+        }
     }
 }

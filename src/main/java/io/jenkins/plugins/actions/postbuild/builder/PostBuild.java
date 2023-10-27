@@ -1,6 +1,7 @@
 package io.jenkins.plugins.actions.postbuild.builder;
 
 import java.io.IOException;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -10,10 +11,11 @@ import hudson.model.BuildListener;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Recorder;
 import io.jenkins.plugins.actions.postbuild.descriptor.PostBuildDescriptor;
+import io.jenkins.plugins.exception.ZSprintsException;
 import io.jenkins.plugins.model.BaseModel;
 
 public abstract class PostBuild extends Recorder {
-    private static final Logger LOGGER = Logger.getLogger(PostBuild.class.getName());
+    protected static final Logger LOGGER = Logger.getLogger(PostBuild.class.getName());
     private BaseModel form;
 
     public BaseModel getForm() {
@@ -24,36 +26,25 @@ public abstract class PostBuild extends Recorder {
         return form.getProjectNumber();
     }
 
-    public String getItemNumber() {
-        return form.getItemNumber();
-    }
-
-    public String getSprintNumber() {
-        return form.getSprintNumber();
-    }
-
-    public String getReleaseNumber() {
-        return form.getReleaseNumber();
-    }
-
     public PostBuild(BaseModel form) {
         this.form = form;
     }
 
-    public abstract String perform() throws Exception;
+    public abstract String perform(Function<String, String> replacer) throws Exception;
 
     private final boolean perform(AbstractBuild<?, ?> build, BuildListener listener) {
         try {
-            form.setEnviroinmentVaribaleReplacer((key) -> {
+            String message = perform((key) -> {
                 try {
+                    if (!key.startsWith("$")) {
+                        return key;
+                    }
                     return build.getEnvironment(listener).expand(key);
                 } catch (IOException | InterruptedException e) {
-                    return key;
+                    throw new ZSprintsException(e.getMessage(), e);
                 }
             });
-            String message = perform();
             listener.getLogger().println("[Zoho Sprints] " + message);
-            form.setEnviroinmentVaribaleReplacer(null);
             return true;
         } catch (Exception e) {
             listener.error(e.getMessage());

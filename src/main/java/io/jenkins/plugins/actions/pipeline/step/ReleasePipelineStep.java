@@ -57,4 +57,8 @@ public abstract class ReleasePipelineStep extends PipelineStep {
         return getForm().getNote();
     }
 
+    public String getReleaseNumber() {
+        return getForm().getReleaseNumber();
+    }
+
 }

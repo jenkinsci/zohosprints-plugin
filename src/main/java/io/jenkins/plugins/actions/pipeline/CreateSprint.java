@@ -5,12 +5,9 @@ import java.util.function.Function;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.jenkinsci.plugins.workflow.steps.StepExecution;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
 
 import hudson.Extension;
-import hudson.util.FormValidation;
 import io.jenkins.plugins.Messages;
-import io.jenkins.plugins.Util;
 import io.jenkins.plugins.actions.pipeline.descriptor.PipelineStepDescriptor;
 import io.jenkins.plugins.actions.pipeline.executor.PipelineStepExecutor;
 import io.jenkins.plugins.actions.pipeline.step.SprintsPipelineStep;
@@ -26,13 +23,14 @@ public class CreateSprint extends SprintsPipelineStep {
     }
 
     @Override
-    public StepExecution start(StepContext context) throws Exception {
-        setEnvironmentVariableReplacer(context);
+    public StepExecution execute(StepContext context, Function<String, String> replacer)
+            throws Exception {
         Function<String, String> executor = (key) -> {
             try {
-                return SprintAPI.getInstance().create(getForm());
+                return SprintAPI.getInstance(replacer)
+                        .create(getForm());
             } catch (Exception e) {
-                throw new ZSprintsException(e.getMessage());
+                throw new ZSprintsException(e.getMessage(), e);
             }
 
         };
@@ -49,10 +47,6 @@ public class CreateSprint extends SprintsPipelineStep {
         @Override
         public String getDisplayName() {
             return Messages.sprint_create();
-        }
-
-        public FormValidation doCheckName(@QueryParameter final String name) {
-            return Util.validateRequired(name);
         }
     }
 

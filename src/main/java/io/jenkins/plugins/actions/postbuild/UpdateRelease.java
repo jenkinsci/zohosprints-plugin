@@ -1,5 +1,7 @@
 package io.jenkins.plugins.actions.postbuild;
 
+import java.util.function.Function;
+
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import hudson.Extension;
@@ -17,8 +19,8 @@ public class UpdateRelease extends ReleasePostBuilder {
     }
 
     @Override
-    public String perform() throws Exception {
-        return ReleaseAPI.getInstance().update(getForm());
+    public String perform(Function<String, String> replacer) throws Exception {
+        return ReleaseAPI.getInstance(replacer).update(getForm());
     }
 
     @Extension

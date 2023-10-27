@@ -74,4 +74,12 @@ public abstract class ItemPipelineStep extends PipelineStep {
         return getForm().getNote();
     }
 
+    public String getItemNumber() {
+        return getForm().getItemNumber();
+    }
+
+    public String getSprintNumber() {
+        return getForm().getSprintNumber();
+    }
+
 }

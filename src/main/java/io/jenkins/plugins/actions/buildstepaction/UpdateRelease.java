@@ -1,5 +1,7 @@
 package io.jenkins.plugins.actions.buildstepaction;
 
+import java.util.function.Function;
+
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import hudson.Extension;
@@ -18,8 +20,8 @@ public class UpdateRelease extends ReleaseStepBuilder {
     }
 
     @Override
-    public String perform() throws Exception {
-        return ReleaseAPI.getInstance().update(getForm());
+    public String perform(Function<String, String> replacer) throws Exception {
+        return ReleaseAPI.getInstance(replacer).update(getForm());
     }
 
     @Extension

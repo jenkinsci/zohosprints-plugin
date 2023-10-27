@@ -13,8 +13,6 @@ import io.jenkins.plugins.actions.pipeline.executor.PipelineStepExecutor;
 import io.jenkins.plugins.actions.pipeline.step.ReleasePipelineStep;
 import io.jenkins.plugins.api.ReleaseAPI;
 import io.jenkins.plugins.exception.ZSprintsException;
-import io.jenkins.plugins.model.BaseModel;
-import io.jenkins.plugins.model.Release;
 
 public class CreateRelease extends ReleasePipelineStep {
 
@@ -25,13 +23,14 @@ public class CreateRelease extends ReleasePipelineStep {
     }
 
     @Override
-    public StepExecution start(StepContext context) throws Exception {
-        setEnvironmentVariableReplacer(context);
+    public StepExecution execute(StepContext context, Function<String, String> replacer)
+            throws Exception {
         Function<String, String> executor = (key) -> {
             try {
-                return ReleaseAPI.getInstance().create(getForm());
+                return ReleaseAPI.getInstance(replacer)
+                        .create(getForm());
             } catch (Exception e) {
-                throw new ZSprintsException(e.getMessage());
+                throw new ZSprintsException(e.getMessage(), e);
             }
 
         };
@@ -49,17 +48,5 @@ public class CreateRelease extends ReleasePipelineStep {
         public String getDisplayName() {
             return Messages.release_create();
         }
-    }
-
-    public static class CreateReleaseExecutor extends PipelineStepExecutor {
-
-        protected CreateReleaseExecutor(BaseModel form, StepContext context) {
-            super(form, context);
-        }
-
-        protected String execute() throws Exception {
-            return ReleaseAPI.getInstance().create((Release) getForm());
-        }
-
     }
 }

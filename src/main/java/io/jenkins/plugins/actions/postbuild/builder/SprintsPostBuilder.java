@@ -29,6 +29,10 @@ public abstract class SprintsPostBuilder extends PostBuild {
         return (Sprint) super.getForm();
     }
 
+    public String getSprintNumber() {
+        return getForm().getSprintNumber();
+    }
+
     public String getName() {
         return getForm().getName();
     }

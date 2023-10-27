@@ -5,12 +5,9 @@ import java.util.function.Function;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.jenkinsci.plugins.workflow.steps.StepExecution;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
 
 import hudson.Extension;
-import hudson.util.FormValidation;
 import io.jenkins.plugins.Messages;
-import io.jenkins.plugins.Util;
 import io.jenkins.plugins.actions.pipeline.descriptor.PipelineStepDescriptor;
 import io.jenkins.plugins.actions.pipeline.executor.PipelineStepExecutor;
 import io.jenkins.plugins.actions.pipeline.step.PipelineStep;
@@ -20,8 +17,8 @@ import io.jenkins.plugins.model.FeedStatus;
 
 public class AddFeedStatus extends PipelineStep {
     @DataBoundConstructor
-    public AddFeedStatus(String prefix, String feed) {
-        super(FeedStatus.getInstance(prefix, feed));
+    public AddFeedStatus(String projectNumber, String feed) {
+        super(FeedStatus.getInstance(projectNumber, feed));
     }
 
     public String getFeed() {
@@ -33,13 +30,13 @@ public class AddFeedStatus extends PipelineStep {
     }
 
     @Override
-    public StepExecution start(StepContext context) throws Exception {
-        setEnvironmentVariableReplacer(context);
+    public StepExecution execute(StepContext context, Function<String, String> replacer)
+            throws Exception {
         Function<String, String> executor = (key) -> {
             try {
-                return new FeedStatusAPI().addFeed((FeedStatus) getForm());
+                return new FeedStatusAPI().addFeed((FeedStatus) getForm(), replacer);
             } catch (Exception e) {
-                throw new ZSprintsException(e.getMessage());
+                throw new ZSprintsException(e.getMessage(), e);
             }
 
         };
@@ -56,10 +53,6 @@ public class AddFeedStatus extends PipelineStep {
         @Override
         public String getDisplayName() {
             return Messages.add_feed_status();
-        }
-
-        public FormValidation doCheckFeed(@QueryParameter final String feed) {
-            return Util.validateRequired(feed);
         }
     }
 }

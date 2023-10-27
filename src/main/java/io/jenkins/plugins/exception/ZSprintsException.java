@@ -6,4 +6,8 @@ public class ZSprintsException extends RuntimeException {
         super(message);
     }
 
+    public ZSprintsException(String message, Throwable e) {
+        super(message, e);
+    }
+
 }

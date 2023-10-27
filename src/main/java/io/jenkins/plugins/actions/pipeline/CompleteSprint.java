@@ -10,29 +10,24 @@ import hudson.Extension;
 import io.jenkins.plugins.Messages;
 import io.jenkins.plugins.actions.pipeline.descriptor.PipelineStepDescriptor;
 import io.jenkins.plugins.actions.pipeline.executor.PipelineStepExecutor;
-import io.jenkins.plugins.actions.pipeline.step.PipelineStep;
+import io.jenkins.plugins.actions.pipeline.step.SprintsPipelineStep;
 import io.jenkins.plugins.api.SprintAPI;
 import io.jenkins.plugins.exception.ZSprintsException;
-import io.jenkins.plugins.model.BaseModel;
-import io.jenkins.plugins.model.Sprint;
 
-public class CompleteSprint extends PipelineStep {
+public class CompleteSprint extends SprintsPipelineStep {
     @DataBoundConstructor
     public CompleteSprint(String projectNumber, String sprintNumber) {
-        super(Sprint.getInstance(projectNumber, sprintNumber));
+        super(projectNumber, sprintNumber);
     }
 
-    public Sprint getForm() {
-        return (Sprint) super.getForm();
-    }
-
-    public StepExecution start(StepContext context) throws Exception {
-        setEnvironmentVariableReplacer(context);
+    public StepExecution execute(StepContext context, Function<String, String> replacer)
+            throws Exception {
         Function<String, String> executor = (key) -> {
             try {
-                return SprintAPI.getInstance().complete(getForm());
+                return SprintAPI.getInstance(replacer)
+                        .complete(getForm());
             } catch (Exception e) {
-                throw new ZSprintsException(e.getMessage());
+                throw new ZSprintsException(e.getMessage(), e);
             }
 
         };
@@ -43,22 +38,12 @@ public class CompleteSprint extends PipelineStep {
     public static final class DescriptorImpl extends PipelineStepDescriptor {
         @Override
         public String getFunctionName() {
-            return "CompleteSprint";
+            return "completeSprint";
         }
 
         @Override
         public String getDisplayName() {
             return Messages.update_sprint_complete();
-        }
-    }
-
-    public static class CompleteSprintExecutor extends PipelineStepExecutor {
-        protected CompleteSprintExecutor(BaseModel form, StepContext context) {
-            super(form, context);
-        }
-
-        protected String execute() throws Exception {
-            return SprintAPI.getInstance().complete((Sprint) getForm());
         }
     }
 

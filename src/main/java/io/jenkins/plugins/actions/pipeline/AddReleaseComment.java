@@ -22,13 +22,14 @@ public class AddReleaseComment extends ReleasePipelineStep {
     }
 
     @Override
-    public StepExecution start(StepContext context) throws Exception {
-        setEnvironmentVariableReplacer(context);
+    public StepExecution execute(StepContext context, Function<String, String> replacer)
+            throws Exception {
         Function<String, String> executor = (key) -> {
             try {
-                return ReleaseAPI.getInstance().addComment(getForm());
+                return ReleaseAPI.getInstance(replacer)
+                        .addComment(getForm());
             } catch (Exception e) {
-                throw new ZSprintsException(e.getMessage());
+                throw new ZSprintsException(e.getMessage(), e);
             }
 
         };
@@ -39,7 +40,7 @@ public class AddReleaseComment extends ReleasePipelineStep {
     public static final class DescriptorImpl extends PipelineStepDescriptor {
         @Override
         public String getFunctionName() {
-            return "AddReleaseComment";
+            return "addSprintsReleaseComment";
         }
 
         @Override

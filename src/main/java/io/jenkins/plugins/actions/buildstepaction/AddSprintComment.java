@@ -1,5 +1,7 @@
 package io.jenkins.plugins.actions.buildstepaction;
 
+import java.util.function.Function;
+
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import hudson.Extension;
@@ -15,8 +17,8 @@ public class AddSprintComment extends SprintsStepBuilder {
     }
 
     @Override
-    public String perform() throws Exception {
-        return SprintAPI.getInstance().addComment(getForm());
+    public String perform(Function<String, String> replacer) throws Exception {
+        return SprintAPI.getInstance(replacer).addComment(getForm());
 
     }
 

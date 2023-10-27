@@ -25,13 +25,14 @@ public class UpdateWorkItem extends ItemPipelineStep {
     }
 
     @Override
-    public StepExecution start(StepContext context) throws Exception {
-        setEnvironmentVariableReplacer(context);
+    public StepExecution execute(StepContext context, Function<String, String> replacer)
+            throws Exception {
         Function<String, String> executor = (key) -> {
             try {
-                return WorkItemAPI.getInstance().updateItem(getForm());
+                return WorkItemAPI.getInstance(replacer)
+                        .updateItem(getForm());
             } catch (Exception e) {
-                throw new ZSprintsException(e.getMessage());
+                throw new ZSprintsException(e.getMessage(), e);
             }
 
         };

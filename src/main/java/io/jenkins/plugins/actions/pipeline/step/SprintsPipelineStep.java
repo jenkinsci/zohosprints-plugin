@@ -58,4 +58,8 @@ public abstract class SprintsPipelineStep extends PipelineStep {
     public String getScrummaster() {
         return getForm().getScrummaster();
     }
+
+    public String getSprintNumber() {
+        return getForm().getSprintNumber();
+    }
 }

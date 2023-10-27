@@ -2,6 +2,7 @@ package io.jenkins.plugins;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,23 +15,26 @@ import jenkins.model.Jenkins;
 public class Util {
     private static final String GET_PROJECT_USER_API = "/projects/no-$1/user/details/";
 
-    public static JSONArray getZSUserIds(String projectNumber, String mailIds)
+    public static JSONArray getZSUserIds(Function<String, String> paramValueReplacer, String projectNumber,
+            String mailIds)
             throws Exception {
-        ZohoClient client = new ZohoClient(GET_PROJECT_USER_API, ZohoClient.METHOD_GET, projectNumber)
+        if (mailIds == null || mailIds.trim().isEmpty()) {
+            return new JSONArray();
+        }
+        String response = new ZohoClient.Builder(GET_PROJECT_USER_API, ZohoClient.METHOD_GET, paramValueReplacer,
+                projectNumber)
                 .addParameter("action", "projectusers")
-                .addParameter("emailids", new JSONArray(mailIds.split(",")));
-        String response = client.execute();
+                .addParameter("emailids", new JSONArray(paramValueReplacer.apply(mailIds).split(",")))
+                .build()
+                .execute();
 
-        JSONObject userObj = new JSONObject(response)
-                .getJSONObject("userObj");
-
+        JSONObject userObj = new JSONObject(response).getJSONObject("userObj");
         Iterator<String> keys = userObj.keys();
         Object[] users = new Object[userObj.length()];
         int counter = 0;
         while (keys.hasNext()) {
             String key = keys.next();
-            JSONObject value = new JSONObject(userObj.get(key));
-            users[counter++] = value.get("zsuserId");
+            users[counter++] = userObj.getJSONObject(key).get("zsuserId");
         }
         return new JSONArray(users);
     }
@@ -42,16 +46,18 @@ public class Util {
         return conf;
     }
 
-    public static void setCustomFields(String customFields, ZohoClient client) {
-        if (customFields != null && customFields.length() > 0) {
-            String[] fields = customFields.split("\n");
-            for (String field : fields) {
-                String[] fieldArr = field.split("=");
-                String key = fieldArr[0];
-                String value = fieldArr[1];
-                client.addParameter(key, value);
-            }
+    public static void setCustomFields(String customFields, ZohoClient.Builder builder) {
+        if (isEmpty(customFields)) {
+            return;
         }
+        String[] fields = customFields.split("\n");
+        for (String field : fields) {
+            String[] fieldArr = field.split("=");
+            String key = fieldArr[0];
+            String value = fieldArr[1];
+            builder.addParameter(key, value);
+        }
+
     }
 
     public static boolean isEmpty(String str) {

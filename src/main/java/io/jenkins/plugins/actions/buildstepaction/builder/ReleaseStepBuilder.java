@@ -24,6 +24,10 @@ public abstract class ReleaseStepBuilder extends BuildStep {
         return (Release) super.getForm();
     }
 
+    public String getReleaseNumber() {
+        return getForm().getReleaseNumber();
+    }
+
     public String getName() {
         return getForm().getName();
     }

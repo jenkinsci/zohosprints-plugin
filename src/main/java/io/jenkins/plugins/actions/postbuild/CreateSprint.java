@@ -1,5 +1,7 @@
 package io.jenkins.plugins.actions.postbuild;
 
+import java.util.function.Function;
+
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
@@ -20,8 +22,8 @@ public class CreateSprint extends SprintsPostBuilder {
     }
 
     @Override
-    public String perform() throws Exception {
-        return SprintAPI.getInstance().create(getForm());
+    public String perform(Function<String, String> replacer) throws Exception {
+        return SprintAPI.getInstance(replacer).create(getForm());
     }
 
     @Extension

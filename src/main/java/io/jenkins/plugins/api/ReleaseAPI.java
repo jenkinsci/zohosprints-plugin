@@ -1,5 +1,7 @@
 package io.jenkins.plugins.api;
 
+import java.util.function.Function;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -12,26 +14,28 @@ public final class ReleaseAPI {
     private static final String CREATE_RELEASE_API = "/projects/no-$1/release/";
     private static final String UPDATE_RELEASE_API = "/projects/no-$1/release/no-$2/update/";
     private static final String ADD_COMMENT_API = "/projects/no-$1/release/no-$2/notes/";
+    Function<String, String> paramValueReplacer;
 
-    private ReleaseAPI() {
-
+    private ReleaseAPI(Function<String, String> paramValueReplacer) {
+        this.paramValueReplacer = paramValueReplacer;
     }
 
-    public static ReleaseAPI getInstance() {
-        return new ReleaseAPI();
+    public static ReleaseAPI getInstance(Function<String, String> replacer) {
+        return new ReleaseAPI(replacer);
     }
 
     public String create(Release release) throws Exception {
         JSONArray ownerIds = null;
         String assignee = release.getOwners();
         if (assignee != null && !assignee.trim().isEmpty()) {
-            ownerIds = Util.getZSUserIds(release.getProjectNumber(), assignee);
+            ownerIds = Util.getZSUserIds(paramValueReplacer, release.getProjectNumber(), assignee);
         }
-        ZohoClient client = new ZohoClient(CREATE_RELEASE_API, ZohoClient.METHOD_POST, release.getProjectNumber())
+        ZohoClient.Builder clientBuilder = new ZohoClient.Builder(CREATE_RELEASE_API, ZohoClient.METHOD_POST,
+                paramValueReplacer,
+                release.getProjectNumber())
                 .setJsonBodyresponse(true)
                 .addParameter("ownerIds", ownerIds);
-        Util.setCustomFields(release.getCustomFields(), client);
-        String response = addOrUpdateRelease(release, client);
+        String response = addOrUpdateRelease(release, clientBuilder);
         String message = new JSONObject(response).optString("message", null);
         if (message == null) {
             return "Release has been added";
@@ -40,7 +44,9 @@ public final class ReleaseAPI {
     }
 
     public String update(Release release) throws Exception {
-        ZohoClient client = new ZohoClient(UPDATE_RELEASE_API, ZohoClient.METHOD_POST, release.getProjectNumber(),
+        ZohoClient.Builder client = new ZohoClient.Builder(UPDATE_RELEASE_API, ZohoClient.METHOD_POST,
+                paramValueReplacer,
+                release.getProjectNumber(),
                 release.getReleaseNumber())
                 .setJsonBodyresponse(true);
 
@@ -52,22 +58,22 @@ public final class ReleaseAPI {
         throw new ZSprintsException(message);
     }
 
-    private String addOrUpdateRelease(Release release, ZohoClient client) throws Exception {
-        client.setJsonBodyresponse(true)
+    private String addOrUpdateRelease(Release release, ZohoClient.Builder clientBuilder) throws Exception {
+        clientBuilder.setJsonBodyresponse(true)
                 .addParameter("name", release.getName())
                 .addParameter("startdate", release.getStartdate())
                 .addParameter("enddate", release.getEnddate())
                 .addParameter("statusName", release.getStage())
                 .addParameter("goal", release.getGoal());
-        Util.setCustomFields(release.getCustomFields(), client);
-        return client.execute();
+        Util.setCustomFields(release.getCustomFields(), clientBuilder);
+        return clientBuilder.build().execute();
     }
 
     public String addComment(Release release) throws Exception {
-
-        new ZohoClient(ADD_COMMENT_API, ZohoClient.METHOD_POST, release.getProjectNumber(),
+        new ZohoClient.Builder(ADD_COMMENT_API, ZohoClient.METHOD_POST, paramValueReplacer, release.getProjectNumber(),
                 release.getReleaseNumber())
                 .addParameter("name", release.getNote())
+                .build()
                 .execute();
         return "Release Comment added successfully";
     }

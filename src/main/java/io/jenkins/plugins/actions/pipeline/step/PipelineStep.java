@@ -1,12 +1,15 @@
 package io.jenkins.plugins.actions.pipeline.step;
 
 import java.io.IOException;
+import java.util.function.Function;
 
 import org.jenkinsci.plugins.workflow.steps.Step;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
+import org.jenkinsci.plugins.workflow.steps.StepExecution;
 
 import hudson.model.Run;
 import hudson.model.TaskListener;
+import io.jenkins.plugins.exception.ZSprintsException;
 import io.jenkins.plugins.model.BaseModel;
 
 public abstract class PipelineStep extends Step {
@@ -20,30 +23,25 @@ public abstract class PipelineStep extends Step {
         return form.getProjectNumber();
     }
 
-    public String getItemNumber() {
-        return form.getItemNumber();
-    }
-
-    public String getSprintNumber() {
-        return form.getSprintNumber();
-    }
-
-    public String getReleaseNumber() {
-        return form.getReleaseNumber();
-    }
-
     public PipelineStep(BaseModel form) {
         this.form = form;
     }
 
-    protected void setEnvironmentVariableReplacer(StepContext context) throws IOException, InterruptedException {
+    public abstract StepExecution execute(StepContext context, Function<String, String> replacer)
+            throws Exception;
+
+    @Override
+    public final StepExecution start(StepContext context) throws Exception {
         TaskListener listener = context.get(TaskListener.class);
         Run<?, ?> run = context.get(Run.class);
-        form.setEnviroinmentVaribaleReplacer((key) -> {
+        return execute(context, (key) -> {
             try {
+                if (!key.startsWith("$")) {
+                    return key;
+                }
                 return run.getEnvironment(listener).expand(key);
             } catch (IOException | InterruptedException e) {
-                return key;
+                throw new ZSprintsException(e.getMessage());
             }
         });
     }

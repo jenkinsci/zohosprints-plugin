@@ -29,6 +29,14 @@ public abstract class ItemStepBuilder extends BuildStep {
         return (Item) super.getForm();
     }
 
+    public String getItemNumber() {
+        return getForm().getItemNumber();
+    }
+
+    public String getSprintNumber() {
+        return getForm().getSprintNumber();
+    }
+
     public String getAssignee() {
         return getForm().getAssignee();
     }

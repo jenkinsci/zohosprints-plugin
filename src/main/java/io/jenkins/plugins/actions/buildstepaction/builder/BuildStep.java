@@ -1,6 +1,7 @@
 package io.jenkins.plugins.actions.buildstepaction.builder;
 
 import java.io.IOException;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -9,6 +10,7 @@ import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.tasks.Builder;
 import io.jenkins.plugins.actions.buildstepaction.descriptor.BuildStepDescriptorImpl;
+import io.jenkins.plugins.exception.ZSprintsException;
 import io.jenkins.plugins.model.BaseModel;
 
 public abstract class BuildStep extends Builder {
@@ -23,38 +25,27 @@ public abstract class BuildStep extends Builder {
         return form.getProjectNumber();
     }
 
-    public String getItemNumber() {
-        return form.getItemNumber();
-    }
-
-    public String getSprintNumber() {
-        return form.getSprintNumber();
-    }
-
-    public String getReleaseNumber() {
-        return form.getReleaseNumber();
-    }
-
     public BuildStep(BaseModel form) {
         this.form = form;
     }
 
-    public abstract String perform() throws Exception;
+    public abstract String perform(Function<String, String> replacer) throws Exception;
 
     @Override
     public final boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener)
             throws InterruptedException, IOException {
         try {
-            form.setEnviroinmentVaribaleReplacer((key) -> {
+            String message = perform((key) -> {
                 try {
+                    if (!key.startsWith("$")) {
+                        return key;
+                    }
                     return build.getEnvironment(listener).expand(key);
                 } catch (IOException | InterruptedException e) {
-                    return key;
+                    throw new ZSprintsException(e.getMessage(), e);
                 }
             });
-            String message = perform();
             listener.getLogger().println("[Zoho Sprints] " + message);
-            form.setEnviroinmentVaribaleReplacer(null);
             return true;
         } catch (Exception e) {
             listener.error(e.getMessage());

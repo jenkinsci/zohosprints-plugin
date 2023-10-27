@@ -9,6 +9,7 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.model.listeners.RunListener;
 import io.jenkins.plugins.api.WorkItemAPI;
+import io.jenkins.plugins.exception.ZSprintsException;
 import io.jenkins.plugins.model.Item;
 
 @Extension
@@ -38,26 +39,27 @@ public class RunTimeListener extends RunListener<Run<?, ?>> {
             String startdate = envVars.get("ZSPRINTS_ISSUE_STARTDATE");
             String enddate = envVars.get("ZSPRINTS_ISSUE_ENDDATE");
             String customfield = envVars.get("ZSPRINTS_ISSUE_CUSTOMFIELD");
-            Item item = Item.getInstance(projectNumber, sprintNumber).setName(name)
-                    .setDescription(description)
-                    .setStatus(status)
-                    .setType(type)
-                    .setPriority(priority)
-                    .setDuration(duration)
-                    .setAssignee(assignee)
-                    .setStartdate(startdate)
-                    .setEnddate(enddate)
-                    .setCustomFields(customfield);
-
-            item.setEnviroinmentVaribaleReplacer((key) -> {
-                try {
-                    return run.getEnvironment(listener).expand(key);
-                } catch (IOException | InterruptedException e) {
-                    return key;
-                }
-            });
             try {
-                String message = WorkItemAPI.getInstance().addItem(item);
+
+                String message = WorkItemAPI.getInstance((key) -> {
+                    try {
+                        if (!key.startsWith("$")) {
+                            return key;
+                        }
+                        return run.getEnvironment(listener).expand(key);
+                    } catch (IOException | InterruptedException e) {
+                        throw new ZSprintsException(e.getMessage(), e);
+                    }
+                }).addItem(Item.getInstance(projectNumber, sprintNumber).setName(name)
+                        .setDescription(description)
+                        .setStatus(status)
+                        .setType(type)
+                        .setPriority(priority)
+                        .setDuration(duration)
+                        .setAssignee(assignee)
+                        .setStartdate(startdate)
+                        .setEnddate(enddate)
+                        .setCustomFields(customfield));
                 if (message != null) {
                     listener.getLogger().println("[Zoho Sprints] " + message);
                 }
