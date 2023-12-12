@@ -13,6 +13,6 @@ public final class FeedStatusAPI {
                 .addParameter("name", feed.getFeed())
                 .build()
                 .execute();
-        return "Feed status successfully added";
+        return "Feed status added. Yay!";
     }
 }

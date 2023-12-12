@@ -45,14 +45,14 @@ public class SprintAPI {
         if (!sprintUsers.isEmpty()) {
             client.addParameter("users", sprintUsers);
         }
-        return addorUpdate(client, sprint, "Sprint added successfully");
+        return addorUpdate(client, sprint, "Sprint created. Yay!");
     }
 
     public String update(Sprint sprint) throws Exception {
         ZohoClient.Builder client = new ZohoClient.Builder(UPDATE_SPRINTS_API, ZohoClient.METHOD_POST,
                 paramValueReplacer, sprint.getProjectNumber(),
                 sprint.getSprintNumber());
-        return addorUpdate(client, sprint, "Sprint updated successfully");
+        return addorUpdate(client, sprint, "Sprint updated. Yay!");
     }
 
     private String addorUpdate(ZohoClient.Builder client, Sprint sprint, String successMessage) throws Exception {
@@ -75,7 +75,7 @@ public class SprintAPI {
                 sprint.getSprintNumber())
                 .build()
                 .execute();
-        return "Sprint has been started successfully";
+        return "Sprint started. Yay!";
     }
 
     public String complete(Sprint sprint) throws Exception {
@@ -87,7 +87,7 @@ public class SprintAPI {
                 .execute();
         int inProgressItemCount = new JSONObject(response).optInt("completedDate", 0);
         if (inProgressItemCount == 0) {
-            return "Sprint has been completed successfully";
+            return "Sprint completed. Yay!";
         }
         throw new ZSprintsException("Unable to complete Sprint");
 
@@ -100,6 +100,6 @@ public class SprintAPI {
                 .addParameter("name", sprint.getNote())
                 .build()
                 .execute();
-        return "Sprint Comment added successfully";
+        return "Sprint comment added. Yay!";
     }
 }

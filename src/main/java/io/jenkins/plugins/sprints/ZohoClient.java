@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.jenkins.plugins.configuration.ZSConnectionConfiguration;
@@ -48,7 +49,6 @@ public class ZohoClient {
         this.method = builder.method;
         this.header = builder.header;
         this.queryParam = builder.queryParam;
-
     }
 
     public boolean isSuccessRequest() {
@@ -63,21 +63,30 @@ public class ZohoClient {
     }
 
     private boolean isOAuthExpired(String response) {
-        return statusCode == HttpServletResponse.SC_BAD_REQUEST &&
-                new JSONObject(response).optInt("code", 0) == 7601;
+        int code = 0;
+        try {
+            code = new JSONObject(response).optInt("code", 0);
+        } catch (JSONException e) {
+            throw new ZSprintsException(response);
+        }
+        return statusCode == HttpServletResponse.SC_BAD_REQUEST && (code == 7601 || code == 7700);
+    }
+
+    private String getResponseAsString(HttpResponse<String> response) {
+        return response.body();
     }
 
     public String execute() throws Exception {
         logger.info(api);
         RequestClient client = getClient();
         HttpResponse<String> response = client.execute();
-        String responseString = response.body();
+        String responseString = getResponseAsString(response);
         statusCode = response.statusCode();
         if (isOAuthExpired(responseString)) {
             logger.info("Retrying the request...");
             generateNewAccessToken();
             response = getClient().execute();
-            responseString = response.body();
+            responseString = getResponseAsString(response);
             statusCode = response.statusCode();
         }
         if (isSuccessRequest()) {

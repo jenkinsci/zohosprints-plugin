@@ -38,7 +38,7 @@ public final class ReleaseAPI {
         String response = addOrUpdateRelease(release, clientBuilder);
         String message = new JSONObject(response).optString("message", null);
         if (message == null) {
-            return "Release has been added";
+            return "Release created. Yay!";
         }
         throw new ZSprintsException(message);
     }
@@ -53,7 +53,7 @@ public final class ReleaseAPI {
         String response = addOrUpdateRelease(release, client);
         String message = new JSONObject(response).optString("i18nMessage", null);
         if (message == null) {
-            return "Release has been updated";
+            return "Release updated. Yay!";
         }
         throw new ZSprintsException(message);
     }
@@ -75,6 +75,6 @@ public final class ReleaseAPI {
                 .addParameter("name", release.getNote())
                 .build()
                 .execute();
-        return "Release Comment added successfully";
+        return "Release comment added. Yay!";
     }
 }

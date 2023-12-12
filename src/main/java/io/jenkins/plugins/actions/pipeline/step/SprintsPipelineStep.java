@@ -62,4 +62,8 @@ public abstract class SprintsPipelineStep extends PipelineStep {
     public String getSprintNumber() {
         return getForm().getSprintNumber();
     }
+
+    public String getCustomFields() {
+        return getForm().getCustomFields();
+    }
 }

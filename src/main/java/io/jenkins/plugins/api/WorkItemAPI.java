@@ -32,7 +32,7 @@ public class WorkItemAPI {
                 .addParameter("name", item.getNote())
                 .build()
                 .execute();
-        return "Work Item Comment added successfully";
+        return "Work item comment added. Yay!";
     }
 
     public String addItem(Item item) throws Exception {
@@ -44,7 +44,7 @@ public class WorkItemAPI {
                 item.getSprintNumber())
                 .addParameter("action", "additem")
                 .addParameter("assignee", assigneeIds);
-        return addOrupdateItem(item, client, "Item has been added");
+        return addOrupdateItem(item, client, "Work item created. Yay!");
     }
 
     public String updateItem(Item item) throws Exception {
@@ -53,7 +53,7 @@ public class WorkItemAPI {
                 item.getSprintNumber(),
                 item.getItemNumber())
                 .addParameter("action", "updateitem");
-        return addOrupdateItem(item, client, "Item fields are updated");
+        return addOrupdateItem(item, client, "Work item fields updated. Yay!");
     }
 
     private String addOrupdateItem(Item item, ZohoClient.Builder client, String successMessage) throws Exception {

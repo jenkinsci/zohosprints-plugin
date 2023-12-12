@@ -6,16 +6,16 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 import hudson.Extension;
 import io.jenkins.plugins.Messages;
-import io.jenkins.plugins.actions.buildstepaction.builder.BuildStep;
+import io.jenkins.plugins.actions.buildstepaction.builder.SprintsStepBuilder;
 import io.jenkins.plugins.actions.buildstepaction.descriptor.BuildStepDescriptorImpl;
 import io.jenkins.plugins.api.SprintAPI;
 import io.jenkins.plugins.model.Sprint;
 
-public class CompleteSprint extends BuildStep {
+public class CompleteSprint extends SprintsStepBuilder {
 
     @DataBoundConstructor
     public CompleteSprint(String projectNumber, String sprintNumber) {
-        super(Sprint.getInstance(projectNumber, sprintNumber));
+        super(projectNumber, sprintNumber);
     }
 
     public Sprint getForm() {
