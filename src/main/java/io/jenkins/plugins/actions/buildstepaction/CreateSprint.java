@@ -3,12 +3,9 @@ package io.jenkins.plugins.actions.buildstepaction;
 import java.util.function.Function;
 
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
 
 import hudson.Extension;
-import hudson.util.FormValidation;
 import io.jenkins.plugins.Messages;
-import io.jenkins.plugins.Util;
 import io.jenkins.plugins.actions.buildstepaction.builder.SprintsStepBuilder;
 import io.jenkins.plugins.actions.buildstepaction.descriptor.BuildStepDescriptorImpl;
 import io.jenkins.plugins.api.SprintAPI;
@@ -31,10 +28,6 @@ public class CreateSprint extends SprintsStepBuilder {
         @Override
         public String getDisplayName() {
             return Messages.sprint_create();
-        }
-
-        public FormValidation doCheckName(@QueryParameter final String name) {
-            return Util.validateRequired(name);
         }
     }
 

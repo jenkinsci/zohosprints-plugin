@@ -85,8 +85,8 @@ public class SprintAPI {
                 .addParameter("action", "complete")
                 .build()
                 .execute();
-        int inProgressItemCount = new JSONObject(response).optInt("completedDate", 0);
-        if (inProgressItemCount == 0) {
+        boolean isCompletedDateAvailable = new JSONObject(response).has("completedDate");
+        if (isCompletedDateAvailable) {
             return "Sprint completed. Yay!";
         }
         throw new ZSprintsException("Unable to complete Sprint");
