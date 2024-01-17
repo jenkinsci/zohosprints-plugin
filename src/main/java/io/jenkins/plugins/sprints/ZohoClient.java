@@ -51,8 +51,10 @@ public class ZohoClient {
         this.queryParam = builder.queryParam;
     }
 
-    public boolean isSuccessRequest() {
-        return statusCode == HttpServletResponse.SC_OK || statusCode == HttpServletResponse.SC_CREATED;
+    private boolean isSuccessRequest(String responseString) {
+        return (statusCode == HttpServletResponse.SC_OK
+                || statusCode == HttpServletResponse.SC_CREATED)
+                && new JSONObject(responseString).has("code");
     }
 
     private RequestClient getClient() throws Exception {
@@ -89,7 +91,7 @@ public class ZohoClient {
             responseString = getResponseAsString(response);
             statusCode = response.statusCode();
         }
-        if (isSuccessRequest()) {
+        if (isSuccessRequest(responseString)) {
             return responseString;
         }
         throw new ZSprintsException(new JSONObject(responseString).toString());

@@ -8,6 +8,7 @@ public abstract class SprintsStepBuilder extends BuildStep {
             String duration, String startdate, String enddate, String customFields) {
         super(Sprint.getInstance(projectNumber, sprintNumber)
                 .setName(name)
+                .setDescription(description)
                 .setDuration(duration)
                 .setStartdate(startdate)
                 .setEnddate(enddate)
