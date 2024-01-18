@@ -54,7 +54,7 @@ public class ZohoClient {
     private boolean isSuccessRequest(String responseString) {
         return (statusCode == HttpServletResponse.SC_OK
                 || statusCode == HttpServletResponse.SC_CREATED)
-                && new JSONObject(responseString).has("code");
+                && !new JSONObject(responseString).has("code");
     }
 
     private RequestClient getClient() throws Exception {
