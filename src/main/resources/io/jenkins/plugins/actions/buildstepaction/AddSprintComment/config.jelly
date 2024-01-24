@@ -1,12 +1,12 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
-        <f:entry title="Project Number" field="projectNumber">
+        <f:entry title="Project Number" field="projectNumber" help="/plugin/zohosprints/help.html">
             <f:textbox/>
         </f:entry>
-        <f:entry title="Sprint Number" field="sprintNumber">
+        <f:entry title="Sprint Number" field="sprintNumber" help="/plugin/zohosprints/help.html">
             <f:textbox/>
         </f:entry>
-        <f:entry title="Add Comment " field="note">
+        <f:entry title="Add Comment " field="note" help="/plugin/zohosprints/help.html">
                   <f:textarea />
          </f:entry>
 </j:jelly>

@@ -1,27 +1,27 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
-        <f:entry title="Project Number" field="projectNumber">
+        <f:entry title="Project Number" field="projectNumber" help="/plugin/zohosprints/help.html">
             <f:textbox/>
         </f:entry>
-        <f:entry title="Release Name" field="name">
+        <f:entry title="Release Name" field="name" help="/plugin/zohosprints/help.html">
             <f:textbox />
         </f:entry>
-        <f:entry title="Release Goal" field="goal">
+        <f:entry title="Release Goal" field="goal" help="/plugin/zohosprints/help.html">
             <f:textarea />
         </f:entry>
-        <f:entry title="Stage" field="stage">
+        <f:entry title="Stage" field="stage" help="/plugin/zohosprints/help.html">
             <f:textbox />
         </f:entry>
-        <f:entry title="Owners" field="owners">
+        <f:entry title="Owners" field="owners" help="/plugin/zohosprints/help.html">
             <f:textbox />
         </f:entry>
-        <f:entry title="Start Date" field="startdate">
+        <f:entry title="Start Date" field="startdate" help="/plugin/zohosprints/help.html">
             <f:textbox />
         </f:entry>
-        <f:entry title="End Date" field="enddate">
+        <f:entry title="End Date" field="enddate" help="/plugin/zohosprints/help.html">
             <f:textbox />
         </f:entry>
-        <f:entry title="Custom Fields" field="customFields">
+        <f:entry title="Custom Fields" field="customFields" help="/plugin/zohosprints/help.html">
             <f:textarea />
         </f:entry>
 

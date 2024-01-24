@@ -1,43 +1,43 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
 
-        <f:entry title="Project Number" field="projectNumber">
+        <f:entry title="Project Number" field="projectNumber" help="/plugin/zohosprints/help.html">
             <f:textbox/>
         </f:entry>
-        <f:entry title="Sprint Number" field="sprintNumber">
+        <f:entry title="Sprint Number" field="sprintNumber" help="/plugin/zohosprints/help.html">
             <f:textbox/>
         </f:entry>
-        <f:entry title="Item Number" field="itemNumber">
+        <f:entry title="Item Number" field="itemNumber" help="/plugin/zohosprints/help.html">
             <f:textbox/>
         </f:entry>
 
-    <f:entry title="Item Name" field="name">
+    <f:entry title="Item Name" field="name" help="/plugin/zohosprints/help.html">
         <f:textbox />
     </f:entry>
 
-    <f:entry title="Item Description" field="description">
+    <f:entry title="Item Description" field="description" help="/plugin/zohosprints/help.html">
         <f:textarea />
     </f:entry>
 
-    <f:entry title="Item Type" field="type">
+    <f:entry title="Item Type" field="type" help="/plugin/zohosprints/help.html">
         <f:textbox/>
     </f:entry>
-    <f:entry title="Item Status" field="status">
+    <f:entry title="Item Status" field="status" help="/plugin/zohosprints/help.html">
         <f:textbox/>
     </f:entry>
-    <f:entry title="Item Priority" field="priority">
+    <f:entry title="Item Priority" field="priority" help="/plugin/zohosprints/help.html">
         <f:textbox/>
     </f:entry>
-    <f:entry title="Duration" field="duration">
+    <f:entry title="Duration" field="duration" help="/plugin/zohosprints/help.html">
         <f:textbox/>
     </f:entry>
-    <f:entry title="Start Date" field="startdate">
+    <f:entry title="Start Date" field="startdate" help="/plugin/zohosprints/help.html">
         <f:textbox/>
     </f:entry>
-    <f:entry title="End Date" field="enddate">
+    <f:entry title="End Date" field="enddate" help="/plugin/zohosprints/help.html">
         <f:textbox/>
     </f:entry>
-    <f:entry title="Custom Fields" field="customFields">
+    <f:entry title="Custom Fields" field="customFields" help="/plugin/zohosprints/help.html">
         <f:textarea />
     </f:entry>
 
