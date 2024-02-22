@@ -9,3 +9,5 @@ work/
 /nbproject/
 .vscode
 .factorypath
+/.apt_generated/
+/.apt_generated_tests/
