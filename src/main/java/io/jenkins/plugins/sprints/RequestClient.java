@@ -18,13 +18,11 @@ import org.json.JSONObject;
 
 public class RequestClient {
     private static final String CHARSET = StandardCharsets.UTF_8.name();
-    private HttpRequest request;
 
-    private RequestClient(HttpRequest request) throws Exception {
-        this.request = request;
+    private RequestClient() throws Exception {
     }
 
-    public HttpResponse<String> execute() throws Exception {
+    private HttpResponse<String> execute(HttpRequest request) throws Exception {
         return HttpClient.newBuilder().build().send(request, BodyHandlers.ofString());
     }
 
@@ -60,6 +58,11 @@ public class RequestClient {
             return this;
         }
 
+        public RequestClientBuilder setHeader(String key, String value) {
+            this.header.put(key, value);
+            return this;
+        }
+
         private String encode(String value) throws UnsupportedEncodingException {
             return URLEncoder.encode(value, CHARSET);
         }
@@ -81,7 +84,7 @@ public class RequestClient {
             return url + "?" + queryString;
         }
 
-        public RequestClient build() throws Exception {
+        public HttpResponse<String> build() throws Exception {
             HttpRequest.Builder requestBuilder = HttpRequest.newBuilder(new URI(getFormattedURLWithQueryParam()))
                     .timeout(Duration.ofMinutes(5));
             if (ZohoClient.METHOD_POST.equals(method)) {
@@ -93,7 +96,7 @@ public class RequestClient {
                                 : BodyPublishers.noBody());
             }
             header.entrySet().forEach(x -> requestBuilder.setHeader(x.getKey(), x.getValue()));
-            return new RequestClient(requestBuilder.build());
+            return new RequestClient().execute(requestBuilder.build());
         }
     }
 }

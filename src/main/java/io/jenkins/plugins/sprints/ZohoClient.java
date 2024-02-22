@@ -18,37 +18,29 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 
 import io.jenkins.plugins.configuration.ZSConnectionConfiguration;
 import io.jenkins.plugins.exception.ZSprintsException;
 
+@Restricted(NoExternalUse.class)
 public class ZohoClient {
     private static final Logger logger = Logger.getLogger(ZohoClient.class.getName());
     private static final Pattern RELATIVE_URL_PATTERN = Pattern.compile("\\$(\\d{1,2})");
     public static final String METHOD_GET = "get";
     public static final String METHOD_POST = "post";
     private int statusCode;
-    private Map<String, Object> queryParam = new HashMap<>();
-    private Map<String, String> header = new HashMap<>();
-    private String api;
-    private String method;
-    private boolean isJsonBodyresponse;
+    private boolean isRetry = false;
+    private RequestClient.RequestClientBuilder clientBuilder;
     final ZSConnectionConfiguration config = getZSConnection();
     Function<String, String> replaceparamValue;
 
     private ZohoClient() {
     }
 
-    public static ZohoClient getInstance() {
-        return new ZohoClient();
-    }
-
-    public ZohoClient(Builder builder) throws Exception {
-        this.api = builder.url;
-        this.isJsonBodyresponse = builder.isJsonBodyresponse;
-        this.method = builder.method;
-        this.header = builder.header;
-        this.queryParam = builder.queryParam;
+    private ZohoClient(RequestClient.RequestClientBuilder clientBuilder) throws Exception {
+        this.clientBuilder = clientBuilder;
     }
 
     private boolean isSuccessRequest(String responseString) {
@@ -57,39 +49,26 @@ public class ZohoClient {
                 && !new JSONObject(responseString).has("code");
     }
 
-    private RequestClient getClient() throws Exception {
-        return new RequestClient.RequestClientBuilder(api, method, queryParam)
-                .setHeader(header)
-                .setJsonBodyContent(isJsonBodyresponse)
-                .build();
-    }
-
-    private boolean isOAuthExpired(String response) {
+    private boolean isTokenExpired(String response) {
         int code = 0;
         try {
             code = new JSONObject(response).optInt("code", 0);
         } catch (JSONException e) {
             throw new ZSprintsException(response);
         }
-        return statusCode == HttpServletResponse.SC_BAD_REQUEST && (code == 7601 || code == 7700);
-    }
-
-    private String getResponseAsString(HttpResponse<String> response) {
-        return response.body();
+        return statusCode == HttpServletResponse.SC_UNAUTHORIZED
+                || (statusCode == HttpServletResponse.SC_BAD_REQUEST && (code == 7601 || code == 7700));
     }
 
     public String execute() throws Exception {
-        logger.info(api);
-        RequestClient client = getClient();
-        HttpResponse<String> response = client.execute();
-        String responseString = getResponseAsString(response);
+        HttpResponse<String> response = clientBuilder.build();
+        String responseString = response.body();
         statusCode = response.statusCode();
-        if (isOAuthExpired(responseString)) {
+        if (!isRetry && isTokenExpired(responseString)) {
             logger.info("Retrying the request...");
+            isRetry = true;
             generateNewAccessToken();
-            response = getClient().execute();
-            responseString = getResponseAsString(response);
-            statusCode = response.statusCode();
+            return execute();
         }
         if (isSuccessRequest(responseString)) {
             return responseString;
@@ -97,7 +76,7 @@ public class ZohoClient {
         throw new ZSprintsException(new JSONObject(responseString).toString());
     }
 
-    public void generateNewAccessToken() throws Exception {
+    private void generateNewAccessToken() throws Exception {
         logger.info("New Token method called");
         String accessToken = null;
         HttpResponse<String> response = new RequestClient.RequestClientBuilder(
@@ -107,20 +86,21 @@ public class ZohoClient {
                 .setParameter("client_secret", config.getClientSecret())
                 .setParameter("refresh_token", config.getRefreshToken())
                 .setParameter("redirect_uri", config.getRedirectURL())
-                .build()
-                .execute();
+                .build();
 
         if (response.statusCode() == HttpServletResponse.SC_OK) {
-            JSONObject respObj = new JSONObject(response.body());
+            String responseString = response.body();
+            JSONObject respObj = new JSONObject(responseString);
             if (respObj.has("access_token")) {
                 logger.info("New Access token created ");
                 accessToken = respObj.getString("access_token");
                 config.setAccessToken(accessToken);
                 config.save();
-                header.put("Authorization", "Zoho-oauthtoken " + accessToken);
+                clientBuilder.setHeader("Authorization", "Zoho-oauthtoken " + accessToken);
                 logger.info("New Token generated");
             } else {
-                logger.log(Level.INFO, "Error occurred during new access token creation Error - {0}", response.body());
+                logger.log(Level.INFO, "Error occurred during new access token creation Error - {0}", responseString);
+                throw new ZSprintsException(responseString);
             }
         }
     }
@@ -181,11 +161,17 @@ public class ZohoClient {
             url = getZSConnection().getZSApiPath() + url;
         }
 
+        private RequestClient.RequestClientBuilder getClientBuilder() throws Exception {
+            return new RequestClient.RequestClientBuilder(url, method, queryParam)
+                    .setHeader(header)
+                    .setJsonBodyContent(isJsonBodyresponse);
+        }
+
         public ZohoClient build() throws Exception {
             constructURI();
             prependDomain();
             setDefaultHeader();
-            return new ZohoClient(this);
+            return new ZohoClient(getClientBuilder());
         }
     }
 }
