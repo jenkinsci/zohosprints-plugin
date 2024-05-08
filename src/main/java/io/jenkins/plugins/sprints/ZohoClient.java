@@ -30,6 +30,8 @@ public class ZohoClient {
     private static final Pattern RELATIVE_URL_PATTERN = Pattern.compile("\\$(\\d{1,2})");
     public static final String METHOD_GET = "get";
     public static final String METHOD_POST = "post";
+    private static final String KEY_ACCESS_TOKEN = "access_token";
+    private static final String KEY_REFRESH_TOKEN = "refresh_token";
     private int statusCode;
     private boolean isRetry = false;
     private RequestClient.RequestClientBuilder clientBuilder;
@@ -77,7 +79,7 @@ public class ZohoClient {
     }
 
     private void generateNewAccessToken() throws Exception {
-        logger.info("New Token method called");
+        logger.info("New Token method invoked");
         String accessToken = null;
         HttpResponse<String> response = new RequestClient.RequestClientBuilder(
                 config.getAccountsDomain() + "/oauth/v2/token", METHOD_POST)
@@ -91,10 +93,11 @@ public class ZohoClient {
         if (response.statusCode() == HttpServletResponse.SC_OK) {
             String responseString = response.body();
             JSONObject respObj = new JSONObject(responseString);
-            if (respObj.has("access_token")) {
+            if (respObj.has(KEY_ACCESS_TOKEN)) {
                 logger.info("New Access token created ");
-                accessToken = respObj.getString("access_token");
+                accessToken = respObj.getString(KEY_ACCESS_TOKEN);
                 config.setAccessToken(accessToken);
+                config.withRefreshToken(respObj.optString(KEY_REFRESH_TOKEN, config.getRefreshToken()));
                 config.save();
                 clientBuilder.setHeader("Authorization", "Zoho-oauthtoken " + accessToken);
                 logger.info("New Token generated");
