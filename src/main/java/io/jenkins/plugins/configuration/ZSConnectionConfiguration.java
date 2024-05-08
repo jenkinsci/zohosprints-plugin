@@ -104,7 +104,7 @@ public class ZSConnectionConfiguration extends GlobalConfiguration {
         return getString(refreshToken);
     }
 
-    private ZSConnectionConfiguration withRefreshToken(String value) {
+    public ZSConnectionConfiguration withRefreshToken(String value) {
         this.refreshToken = getSecret(value);
         return this;
     }
