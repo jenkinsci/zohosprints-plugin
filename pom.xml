@@ -9,7 +9,7 @@
     </parent>
     <groupId>io.jenkins.plugins</groupId>
     <artifactId>zohosprints</artifactId>
-    <version>${revision}${changelist}</version>
+    <version>2.0</version>
     <packaging>hpi</packaging>
     <name>Zoho Sprints</name>
     <description>Plugin which wil help to do action from jenkins while running the job</description>
@@ -29,7 +29,7 @@
         <connection>scm:git:git://github.com/jenkinsci/zohosprints-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/zohosprints-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/zohosprints-plugin</url>
-      <tag>New V2 Plugin</tag>
+      <tag>V2.0-support</tag>
   </scm>
 
     <dependencies>
