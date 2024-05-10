@@ -16,6 +16,7 @@
     <url>https://github.com/jenkinsci/zohosprints-plugin</url>
     <properties>
         <jenkins.version>2.357</jenkins.version>
+        <changelist>-SNAPSHOT</changelist>
     </properties>
     <licenses>
         <license>
