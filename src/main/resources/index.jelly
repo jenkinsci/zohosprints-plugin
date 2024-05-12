@@ -1,4 +1,4 @@
 <?jelly escape-by-default='true'?>
 <div>
-    Sprints Plugin
+    Plugin which wil help to do action from jenkins while running the job.
 </div>
