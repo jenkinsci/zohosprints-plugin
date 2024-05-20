@@ -43,7 +43,7 @@ public class WorkItemAPI {
                 item.getProjectNumber(),
                 item.getSprintNumber())
                 .addParameter("action", "additem")
-                .addParameter("assignee", assigneeIds);
+                .addParameter("users", assigneeIds);
         return addOrupdateItem(item, client, "Work item created. Yay!");
     }
 
